@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en"></html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balloon Shooter Staging</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .balloon {
+            transition: all 0.3s ease;
+            animation: float 3s infinite alternate;
+        }
+        @keyframes float {
+            from { transform: translateY(0px) rotate(5deg); }
+            to { transform: translateY(-20px) rotate(-5deg); }
+        }
+        .game-background {
+            background-image: url('back2.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            overflow: hidden;
+        }
+        .cloud {
+            position: absolute;
+            animation: moveCloud linear infinite;
+        }
+        @keyframes moveCloud {
+            from { transform: translateX(-100px); }
+            to { transform: translateX(100vw); }
+        }
+        .gun {
+            transition: transform 0.2s ease;
+            transform-origin: center;
+        }
+        .heart-container {
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+        }
+        .loading-balloon {
+            animation: loadingFloat 2s infinite ease-in-out;
+        }
+        @keyframes loadingFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+        .score-text {
+            color: #1e3a8a;
+            text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
+        }
+        .highest-score-text {
+            color: #dc2626;
+            text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
+        }
+        
+        /* Points popup animation */
+        .points-popup {
+            position: absolute;
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #fbbf24;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            pointer-events: none;
+            z-index: 1000;
+            animation: pointsFloat 1.5s ease-out forwards;
+        }
+        
+        @keyframes pointsFloat {
+            0% {
+                opacity: 1;
+                transform: translateY(0px) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-50px) scale(1.2);
+            }
+        }
+        
+        /* Balloon vanish animation */
+        .balloon-vanish {
+            animation: vanishAtTop 0.5s ease-out forwards;
+        }
+        
+        @keyframes vanishAtTop {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+        }
+        
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .score-container {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: center;
+            }
+            .game-title {
+                font-size: 2rem;
+            }
+            .score-text {
+                font-size: 1.5rem;
+            }
+            .highest-score-text {
+                font-size: 1.25rem;
+            }
+            .game-area-mobile {
+                height: 70vh;
+            }
+            .gun-mobile {
+                width: 20vw;
+                height: 20vw;
+                max-width: 80px;
+                max-height: 80px;
+            }
+            .balloon-mobile {
+                width: 12vw;
+                height: 18vw;
+                max-width: 48px;
+                max-height: 72px;
+            }
+            .heart-mobile {
+                width: 8vw;
+                height: 8vw;
+                max-width: 32px;
+                max-height: 32px;
+            }
+            .points-popup {
+                font-size: 1.2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .game-title {
+                font-size: 1.75rem;
+            }
+            .score-text {
+                font-size: 1.25rem;
+            }
+            .highest-score-text {
+                font-size: 1rem;
+            }
+            .loading-balloon-mobile {
+                width: 32vw;
+                height: 32vw;
+                max-width: 150px;
+                max-height: 150px;
+            }
+            .points-popup {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="fixed inset-0 bg-gradient-to-b from-blue-400 to-blue-600 z-50 flex flex-col items-center justify-center px-4">
+        <!-- Balloon Image -->
+        <img src="ballon.jpeg" class="w-48 h-48 md:w-48 md:h-48 loading-balloon-mobile loading-balloon mb-8 rounded-full shadow-2xl" alt="Balloon">
+        
+        <!-- Game Title -->
+        <h1 class="text-4xl md:text-4xl game-title font-bold text-white mb-8 text-center">Balloon Shooter</h1>
+        
+        <!-- Progress Bar Container -->
+        <div class="w-80 max-w-sm h-6 bg-white/30 rounded-full mt-4 backdrop-blur-sm border-2 border-white/50">
+            <div id="progressBar" class="h-full bg-gradient-to-r from-amber-400 to-rose-600 rounded-full transition-all duration-300 shadow-lg" style="width: 0%"></div>
+        </div>
+        
+        <!-- Progress Text -->
+        <p id="progressText" class="text-white mt-6 text-xl font-semibold">Loading... 0%</p>
+        
+        <!-- Loading Dots Animation -->
+        <div class="flex space-x-2 mt-4">
+            <div class="w-3 h-3 bg-white rounded-full animate-bounce"></div>
+            <div class="w-3 h-3 bg-white rounded-full animate-bounce" style="animation-delay: 0.1s;"></div>
+            <div class="w-3 h-3 bg-white rounded-full animate-bounce" style="animation-delay: 0.2s;"></div>
+        </div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="gameOverScreen" class="hidden fixed inset-0 bg-black/80 z-50 flex flex-col items-center justify-center px-4">
+        <h2 class="text-4xl md:text-6xl font-bold text-red-500 mb-8 text-center">Game Over</h2>
+        <p class="text-2xl md:text-3xl text-white mb-4 text-center">Final Score: <span id="finalScore" class="text-blue-400 font-bold">0</span></p>
+        <p class="text-xl md:text-2xl text-white mb-8 text-center">Highest Score: <span id="gameOverHighestScore" class="text-yellow-400 font-bold">0</span></p>
+        <button onclick="restartGame()" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg text-xl transition-colors">
+            Play Again
+        </button>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="gameScreen" class="hidden">
+        <div class="game-background min-h-screen">
+            <!-- Sky Elements -->
+            <!-- <img src="https://www.freeiconspng.com/uploads/cloud-png-30.png" class="cloud w-16 md:w-24 opacity-80" style="top: 5%; animation-duration: 20s;">
+            <img src="https://www.freeiconspng.com/uploads/cloud-png-30.png" class="cloud w-20 md:w-32 opacity-60" style="top: 15%; animation-duration: 25s;"> -->
+            
+            <!-- Game Container -->
+            <div class="container mx-auto px-2 md:px-4 py-4 md:py-8 relative">
+                <!-- Score and Lives -->
+                <div class="flex flex-col md:flex-row justify-between items-center mb-4 md:mb-8 score-container">
+                    <div class="flex flex-col items-center md:items-start">
+                        <div class="text-2xl md:text-3xl font-bold score-text">Score: <span id="score">0</span></div>
+                        <div class="text-lg md:text-xl font-bold highest-score-text mt-1">Highest: <span id="highestScore">0</span></div>
+                    </div>
+                    <div id="lives" class="heart-container flex gap-1 md:gap-2 mt-2 md:mt-0">
+                        <img src="https://www.freeiconspng.com/uploads/heart-icon-14.png" class="w-8 h-8 md:w-10 md:h-10 heart-mobile">
+                        <img src="https://www.freeiconspng.com/uploads/heart-icon-14.png" class="w-8 h-8 md:w-10 md:h-10 heart-mobile">
+                        <img src="https://www.freeiconspng.com/uploads/heart-icon-14.png" class="w-8 h-8 md:w-10 md:h-10 heart-mobile">
+                    </div>
+                </div>
+                
+                <!-- Game Area -->
+                <div id="gameArea" class="relative h-[70vh] md:h-[80vh] game-area-mobile overflow-hidden rounded-3xl">
+                    <!-- Gun Container -->
+                    <div id="gunContainer" class="absolute bottom-2 md:bottom-4 left-1/2 transform -translate-x-1/2 z-10">
+                        <img id="gun" src="gun.png" 
+                             class="w-16 h-16 md:w-24 md:h-24 gun-mobile gun cursor-pointer" alt="Gun">
+                    </div>
+                </div>
+                
+                <!-- Mobile Touch Instructions -->
+                <div class="md:hidden text-center mt-4">
+                    <p class="text-white text-sm bg-black/50 rounded-lg px-4 py-2 inline-block">
+                        Touch and drag to move gun • Tap to shoot
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let score = 0;
+        let lives = 3;
+        let missedBalloons = 0;
+        let gunPosition = 50;
+        let highestScore = 0;
+        let balloonIntervals = []; // Store balloon creation intervals
+        
+        // Balloon configuration with images and points
+        const balloonTypes = [
+            { image: 'b1.png', points: 2 },
+            { image: 'b2.png', points: 2 },
+            { image: 'b3.png', points: 5 },
+            { image: 'b4.png', points: 5 },
+            { image: 'b5.png', points: 10 },
+            { image: 'b6.png', points: 5 }
+
+        ];
+        
+        const shootSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2771/2771-preview.mp3');
+        const popSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2870/2870-preview.mp3');
+        const gameOverSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2658/2658-preview.mp3');
+
+        // Game initialization
+        window.onload = () => {
+            loadHighestScore();
+            loadGame();
+            preloadSounds();
+        };
+
+        function loadHighestScore() {
+            const saved = localStorage.getItem('balloonCrackerHighestScore');
+            if (saved) {
+                highestScore = parseInt(saved);
+                updateHighestScore();
+            }
+        }
+
+        function saveHighestScore() {
+            localStorage.setItem('balloonCrackerHighestScore', highestScore.toString());
+        }
+
+        function updateHighestScore() {
+            document.getElementById('highestScore').textContent = highestScore;
+            document.getElementById('gameOverHighestScore').textContent = highestScore;
+        }
+
+        function preloadSounds() {
+            shootSound.load();
+            popSound.load();
+            gameOverSound.load();
+        }
+
+        function loadGame() {
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 2;
+                document.getElementById('progressBar').style.width = `${progress}%`;
+                document.getElementById('progressText').textContent = `Loading... ${progress}%`;
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        document.getElementById('loadingScreen').classList.add('hidden');
+                        document.getElementById('gameScreen').classList.remove('hidden');
+                        startGame();
+                    }, 500);
+                }
+            }, 50);
+        }
+
+        function startGame() {
+            // Reset all game variables to initial state
+            score = 0;  // Reset score to 0
+            lives = 3;
+            missedBalloons = 0;
+            
+            // Clear any existing intervals
+            balloonIntervals.forEach(interval => clearInterval(interval));
+            balloonIntervals = [];
+            
+            // Clear existing balloons
+            const existingBalloons = document.querySelectorAll('.balloon');
+            existingBalloons.forEach(balloon => balloon.remove());
+            
+            updateScore();
+            updateLives();
+            updateHighestScore();
+            setupControls();
+            createBalloons();
+        }
+
+        function createBalloons() {
+            const interval = setInterval(() => {
+                if (Math.random() < 0.7) createBalloon();
+            }, 1000);
+            balloonIntervals.push(interval);
+        }
+
+        function createBalloon() {
+            // Randomly select a balloon type
+            const balloonType = balloonTypes[Math.floor(Math.random() * balloonTypes.length)];
+            
+            const balloon = document.createElement('img');
+            balloon.src = balloonType.image;
+            balloon.className = 'balloon absolute w-12 h-18 md:w-16 md:h-24 balloon-mobile';
+            balloon.style.left = `${Math.random() * 80}%`;
+            balloon.style.bottom = '-60px';
+                        
+            // Store the points value as a data attribute
+            balloon.dataset.points = balloonType.points;
+            
+            document.getElementById('gameArea').appendChild(balloon);
+            
+            // Create animation that stops at the top of the game area
+            const animation = balloon.animate([
+                { bottom: '-60px', opacity: 1 },
+                { bottom: 'calc(100% - 60px)', opacity: 1 },
+                { bottom: 'calc(100% - 30px)', opacity: 0.5 },
+                { bottom: '100%', opacity: 0 }
+            ], {
+                duration: 8000,
+                easing: 'linear'
+            });
+
+            // Monitor balloon position and make it vanish at the top
+            let animationFrame;
+            const checkBalloonPosition = () => {
+                if (balloon.parentNode) {
+                    const balloonRect = balloon.getBoundingClientRect();
+                    const gameAreaRect = document.getElementById('gameArea').getBoundingClientRect();
+                    
+                    // Check if balloon has reached the top of the game area
+                    if (balloonRect.bottom <= gameAreaRect.top + 50) {
+                        // Add vanish animation
+                        balloon.classList.add('balloon-vanish');
+                        
+                        // Remove balloon after vanish animation
+                        setTimeout(() => {
+                            if (balloon.parentNode) {
+                                balloon.remove();
+                                missedBalloons++;
+                                if (missedBalloons >= 5) {
+                                    loseLife();
+                                    missedBalloons = 0;
+                                }
+                            }
+                        }, 500);
+                        
+                        cancelAnimationFrame(animationFrame);
+                    } else {
+                        animationFrame = requestAnimationFrame(checkBalloonPosition);
+                    }
+                }
+            };
+            
+            // Start monitoring balloon position
+            animationFrame = requestAnimationFrame(checkBalloonPosition);
+
+            animation.onfinish = () => {
+                if (balloon.parentNode) {
+                    balloon.remove();
+                    missedBalloons++;
+                    if (missedBalloons >= 5) {
+                        loseLife();
+                        missedBalloons = 0;
+                    }
+                }
+                cancelAnimationFrame(animationFrame);
+            };
+        }
+
+        function setupControls() {
+            // Remove existing event listeners to prevent duplicates
+            document.removeEventListener('keydown', handleKeyDown);
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('touchmove', handleTouchMove);
+            document.removeEventListener('touchend', handleTouchEnd);
+            
+            // Add event listeners
+            document.addEventListener('keydown', handleKeyDown);
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('touchmove', handleTouchMove);
+            document.addEventListener('touchend', handleTouchEnd);
+
+            // Gun click event
+            const gun = document.getElementById('gun');
+            gun.removeEventListener('click', shoot);
+            gun.addEventListener('click', shoot);
+        }
+
+        function handleKeyDown(e) {
+            if (e.key === 'ArrowLeft') gunPosition = Math.max(0, gunPosition - 5);
+            if (e.key === 'ArrowRight') gunPosition = Math.min(100, gunPosition + 5);
+            if (e.key === ' ') {
+                e.preventDefault();
+                shoot();
+            }
+            updateGunPosition();
+        }
+
+        function handleMouseMove(e) {
+            const gameArea = document.getElementById('gameArea');
+            const rect = gameArea.getBoundingClientRect();
+            gunPosition = ((e.clientX - rect.left) / rect.width) * 100;
+            gunPosition = Math.max(0, Math.min(100, gunPosition));
+            updateGunPosition();
+        }
+
+        function handleTouchMove(e) {
+            const gameArea = document.getElementById('gameArea');
+            const rect = gameArea.getBoundingClientRect();
+            const touch = e.touches[0];
+            gunPosition = ((touch.clientX - rect.left) / rect.width) * 100;
+            gunPosition = Math.max(0, Math.min(100, gunPosition));
+            updateGunPosition();
+            e.preventDefault();
+        }
+
+        function handleTouchEnd(e) {
+            e.preventDefault();
+            shoot();
+        }
+
+        function updateGunPosition() {
+            const gunContainer = document.getElementById('gunContainer');
+            gunContainer.style.left = `${gunPosition}%`;
+        }
+
+        function shoot() {
+            const gun = document.getElementById('gun');
+            shootSound.currentTime = 0;
+            shootSound.play().catch(() => {}); // Ignore audio errors
+            
+            gun.style.transform = 'translateY(-10px) rotate(-20deg)';
+            setTimeout(() => gun.style.transform = 'none', 200);
+
+            createBulletEffect();
+            checkHits();
+        }
+
+        function createBulletEffect() {
+            const bullet = document.createElement('div');
+            bullet.className = 'absolute w-1 h-6 md:w-2 md:h-8 bg-yellow-400 rounded-full';
+            bullet.style.left = '50%';
+            bullet.style.bottom = '100%';
+            bullet.style.transform = 'translateX(-50%)';
+            
+            document.getElementById('gunContainer').appendChild(bullet);
+            
+            bullet.animate([
+                { bottom: '100%', opacity: 1 },
+                { bottom: '200%', opacity: 0 }
+            ], {
+                duration: 500,
+                easing: 'linear'
+            }).onfinish = () => {
+                if (bullet.parentNode) {
+                    bullet.remove();
+                }
+            };
+        }
+
+        function checkHits() {
+            const gunRect = document.getElementById('gun').getBoundingClientRect();
+            const balloons = document.querySelectorAll('.balloon');
+
+            balloons.forEach(balloon => {
+                const balloonRect = balloon.getBoundingClientRect();
+                const distance = Math.abs(balloonRect.left + balloonRect.width/2 - gunRect.left - gunRect.width/2);
+                if (distance < 60) { // Increased hit detection for mobile
+                    popBalloon(balloon);
+                }
+            });
+        }
+
+        function popBalloon(balloon) {
+            popSound.currentTime = 0;
+            popSound.play().catch(() => {}); // Ignore audio errors
+            
+            // Get points from the balloon's data attribute
+            const points = parseInt(balloon.dataset.points);
+            score += points;
+            
+            // Show points popup
+            showPointsPopup(balloon, points);
+            
+            // Check if new highest score
+            if (score > highestScore) {
+                highestScore = score;
+                saveHighestScore();
+                updateHighestScore();
+            }
+            
+            updateScore();
+            
+            // Change to explosion image
+            balloon.src = 'cb.png';
+            balloon.style.transform = 'scale(1.5)';
+            balloon.style.opacity = '0';
+            
+            setTimeout(() => {
+                if (balloon.parentNode) {
+                    balloon.remove();
+                }
+            }, 300);
+        }
+
+        function showPointsPopup(balloon, points) {
+            const popup = document.createElement('div');
+            popup.className = 'points-popup';
+            popup.textContent = `+${points}`;
+            
+            // Position the popup at the balloon's location
+            const balloonRect = balloon.getBoundingClientRect();
+            const gameAreaRect = document.getElementById('gameArea').getBoundingClientRect();
+            
+            popup.style.left = `${balloonRect.left - gameAreaRect.left + balloonRect.width/2}px`;
+            popup.style.top = `${balloonRect.top - gameAreaRect.top}px`;
+            
+            document.getElementById('gameArea').appendChild(popup);
+            
+            // Remove popup after animation
+            setTimeout(() => {
+                if (popup.parentNode) {
+                    popup.remove();
+                }
+            }, 1500);
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = score;
+        }
+
+        function loseLife() {
+            lives--;
+            updateLives();
+            
+            if (lives <= 0) {
+                gameOver();
+            }
+        }
+
+        function updateLives() {
+            const livesContainer = document.getElementById('lives');
+            const heartHTML = '<img src="https://www.freeiconspng.com/uploads/heart-icon-14.png" class="w-8 h-8 md:w-10 md:h-10 heart-mobile">';
+            livesContainer.innerHTML = Array(lives).fill(heartHTML).join('');
+        }
+
+        function gameOver() {
+            gameOverSound.play().catch(() => {}); // Ignore audio errors
+            
+            // Clear all intervals
+            balloonIntervals.forEach(interval => clearInterval(interval));
+            balloonIntervals = [];
+            
+            // Update final score and highest score
+            document.getElementById('finalScore').textContent = score;
+            updateHighestScore();
+            
+            document.getElementById('gameOverScreen').classList.remove('hidden');
+        }
+
+        function restartGame() {
+            document.getElementById('gameOverScreen').classList.add('hidden');
+            // This will now reset score to 0 because startGame() sets score = 0
+            startGame();
+        }
+
+        // Prevent zoom on double tap for mobile
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // Prevent context menu on long press
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // Handle orientation change
+        window.addEventListener('orientationchange', function() {
+            setTimeout(function() {
+                // Recalculate gun position after orientation change
+                updateGunPosition();
+            }, 100);
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            updateGunPosition();
+        });
+    </script>
+</body>
+</html>
+
