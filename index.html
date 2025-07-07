@@ -92,12 +92,31 @@
             }
         }
         
+        /* Balloon uniform size - larger for all devices */
+        .balloon-uniform {
+            width: 80px !important;
+            height: 120px !important;
+        }
+        
+        /* Specific balloon sizes for b2, b3, b4 - larger */
+        .balloon-b2, .balloon-b3, .balloon-b4 {
+            width: 90px !important;
+            height: 135px !important;
+        }
+        
         /* Mobile Responsive Styles */
         @media (max-width: 768px) {
             .score-container {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: center;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: flex-start;
+                width: 100%;
+            }
+            .score-left {
+                text-align: left;
+            }
+            .score-right {
+                text-align: right;
             }
             .game-title {
                 font-size: 2rem;
@@ -106,7 +125,7 @@
                 font-size: 1.5rem;
             }
             .highest-score-text {
-                font-size: 1.25rem;
+                font-size: 1.5rem;
             }
             .game-area-mobile {
                 height: 70vh;
@@ -117,11 +136,14 @@
                 max-width: 80px;
                 max-height: 80px;
             }
-            .balloon-mobile {
-                width: 12vw;
-                height: 18vw;
-                max-width: 48px;
-                max-height: 72px;
+            .balloon-uniform {
+                width: 60px !important;
+                height: 90px !important;
+            }
+            /* Larger sizes for b2, b3, b4 on mobile */
+            .balloon-b2, .balloon-b3, .balloon-b4 {
+                width: 75px !important;
+                height: 110px !important;
             }
             .heart-mobile {
                 width: 8vw;
@@ -131,6 +153,12 @@
             }
             .points-popup {
                 font-size: 1.2rem;
+            }
+            .play-again-btn {
+                font-size: 1.2rem;
+                padding: 12px 24px;
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
             }
         }
         
@@ -142,7 +170,7 @@
                 font-size: 1.25rem;
             }
             .highest-score-text {
-                font-size: 1rem;
+                font-size: 1.25rem;
             }
             .loading-balloon-mobile {
                 width: 32vw;
@@ -152,6 +180,19 @@
             }
             .points-popup {
                 font-size: 1rem;
+            }
+            .balloon-uniform {
+                width: 50px !important;
+                height: 75px !important;
+            }
+            /* Even larger sizes for b2, b3, b4 on small mobile */
+            .balloon-b2, .balloon-b3, .balloon-b4 {
+                width: 65px !important;
+                height: 95px !important;
+            }
+            .play-again-btn {
+                font-size: 1.1rem;
+                padding: 10px 20px;
             }
         }
     </style>
@@ -186,7 +227,7 @@
         <h2 class="text-4xl md:text-6xl font-bold text-red-500 mb-8 text-center">Game Over</h2>
         <p class="text-2xl md:text-3xl text-white mb-4 text-center">Final Score: <span id="finalScore" class="text-blue-400 font-bold">0</span></p>
         <p class="text-xl md:text-2xl text-white mb-8 text-center">Highest Score: <span id="gameOverHighestScore" class="text-yellow-400 font-bold">0</span></p>
-        <button onclick="restartGame()" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg text-xl transition-colors">
+        <button id="playAgainBtn" class="bg-green-500 hover:bg-green-600 active:bg-green-700 text-white font-bold py-3 px-6 rounded-lg text-xl transition-colors play-again-btn">
             Play Again
         </button>
     </div>
@@ -194,22 +235,20 @@
     <!-- Game Screen -->
     <div id="gameScreen" class="hidden">
         <div class="game-background min-h-screen">
-            <!-- Sky Elements -->
-            <!-- <img src="https://www.freeiconspng.com/uploads/cloud-png-30.png" class="cloud w-16 md:w-24 opacity-80" style="top: 5%; animation-duration: 20s;">
-            <img src="https://www.freeiconspng.com/uploads/cloud-png-30.png" class="cloud w-20 md:w-32 opacity-60" style="top: 15%; animation-duration: 25s;"> -->
-            
             <!-- Game Container -->
             <div class="container mx-auto px-2 md:px-4 py-4 md:py-8 relative">
                 <!-- Score and Lives -->
-                <div class="flex flex-col md:flex-row justify-between items-center mb-4 md:mb-8 score-container">
-                    <div class="flex flex-col items-center md:items-start">
+                <div class="flex justify-between items-start mb-4 md:mb-8 score-container w-full">
+                    <div class="score-left">
                         <div class="text-2xl md:text-3xl font-bold score-text">Score: <span id="score">0</span></div>
-                        <div class="text-lg md:text-xl font-bold highest-score-text mt-1">Highest: <span id="highestScore">0</span></div>
                     </div>
-                    <div id="lives" class="heart-container flex gap-1 md:gap-2 mt-2 md:mt-0">
-                        <img src="https://www.freeiconspng.com/uploads/heart-icon-14.png" class="w-8 h-8 md:w-10 md:h-10 heart-mobile">
-                        <img src="https://www.freeiconspng.com/uploads/heart-icon-14.png" class="w-8 h-8 md:w-10 md:h-10 heart-mobile">
-                        <img src="https://www.freeiconspng.com/uploads/heart-icon-14.png" class="w-8 h-8 md:w-10 md:h-10 heart-mobile">
+                    <div class="score-right flex flex-col items-end">
+                        <div class="text-2xl md:text-3xl font-bold highest-score-text mb-2">Highest: <span id="highestScore">0</span></div>
+                        <div id="lives" class="heart-container flex gap-1 md:gap-2">
+                            <img src="https://www.freeiconspng.com/uploads/heart-icon-14.png" class="w-8 h-8 md:w-10 md:h-10 heart-mobile">
+                            <img src="https://www.freeiconspng.com/uploads/heart-icon-14.png" class="w-8 h-8 md:w-10 md:h-10 heart-mobile">
+                            <img src="https://www.freeiconspng.com/uploads/heart-icon-14.png" class="w-8 h-8 md:w-10 md:h-10 heart-mobile">
+                        </div>
                     </div>
                 </div>
                 
@@ -220,13 +259,6 @@
                         <img id="gun" src="gun.png" 
                              class="w-16 h-16 md:w-24 md:h-24 gun-mobile gun cursor-pointer" alt="Gun">
                     </div>
-                </div>
-                
-                <!-- Mobile Touch Instructions -->
-                <div class="md:hidden text-center mt-4">
-                    <p class="text-white text-sm bg-black/50 rounded-lg px-4 py-2 inline-block">
-                        Touch and drag to move gun • Tap to shoot
-                    </p>
                 </div>
             </div>
         </div>
@@ -242,13 +274,12 @@
         
         // Balloon configuration with images and points
         const balloonTypes = [
-            { image: 'b1.png', points: 2 },
-            { image: 'b2.png', points: 2 },
-            { image: 'b3.png', points: 5 },
-            { image: 'b4.png', points: 5 },
-            { image: 'b5.png', points: 10 },
-            { image: 'b6.png', points: 5 }
-
+            { image: 'b1.png', points: 2, class: 'balloon-uniform' },
+            { image: 'b2.png', points: 2, class: 'balloon-b2' },
+            { image: 'b3.png', points: 5, class: 'balloon-b3' },
+            { image: 'b4.png', points: 5, class: 'balloon-b4' },
+            { image: 'b5.png', points: 10, class: 'balloon-uniform' },
+            { image: 'b6.png', points: 5, class: 'balloon-uniform' }
         ];
         
         const shootSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2771/2771-preview.mp3');
@@ -260,7 +291,26 @@
             loadHighestScore();
             loadGame();
             preloadSounds();
+            setupPlayAgainButton();
         };
+
+        function setupPlayAgainButton() {
+            const playAgainBtn = document.getElementById('playAgainBtn');
+            
+            // Remove any existing event listeners
+            playAgainBtn.removeEventListener('click', restartGame);
+            playAgainBtn.removeEventListener('touchend', handlePlayAgainTouch);
+            
+            // Add both click and touch event listeners
+            playAgainBtn.addEventListener('click', restartGame);
+            playAgainBtn.addEventListener('touchend', handlePlayAgainTouch);
+        }
+
+        function handlePlayAgainTouch(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            restartGame();
+        }
 
         function loadHighestScore() {
             const saved = localStorage.getItem('balloonCrackerHighestScore');
@@ -298,7 +348,7 @@
                         document.getElementById('loadingScreen').classList.add('hidden');
                         document.getElementById('gameScreen').classList.remove('hidden');
                         startGame();
-                    }, 500);
+                                       }, 500);
                 }
             }, 50);
         }
@@ -337,9 +387,9 @@
             
             const balloon = document.createElement('img');
             balloon.src = balloonType.image;
-            balloon.className = 'balloon absolute w-12 h-18 md:w-16 md:h-24 balloon-mobile';
+            balloon.className = `balloon absolute ${balloonType.class}`;
             balloon.style.left = `${Math.random() * 80}%`;
-            balloon.style.bottom = '-60px';
+            balloon.style.bottom = '-140px'; // Adjusted for larger balloons
                         
             // Store the points value as a data attribute
             balloon.dataset.points = balloonType.points;
@@ -348,9 +398,9 @@
             
             // Create animation that stops at the top of the game area
             const animation = balloon.animate([
-                { bottom: '-60px', opacity: 1 },
-                { bottom: 'calc(100% - 60px)', opacity: 1 },
-                { bottom: 'calc(100% - 30px)', opacity: 0.5 },
+                { bottom: '-140px', opacity: 1 },
+                { bottom: 'calc(100% - 140px)', opacity: 1 },
+                { bottom: 'calc(100% - 70px)', opacity: 0.5 },
                 { bottom: '100%', opacity: 0 }
             ], {
                 duration: 8000,
@@ -502,7 +552,11 @@
             balloons.forEach(balloon => {
                 const balloonRect = balloon.getBoundingClientRect();
                 const distance = Math.abs(balloonRect.left + balloonRect.width/2 - gunRect.left - gunRect.width/2);
-                if (distance < 60) { // Increased hit detection for mobile
+                // Increased hit detection for larger balloons, especially b2, b3, b4
+                const hitDistance = balloon.classList.contains('balloon-b2') || 
+                                  balloon.classList.contains('balloon-b3') || 
+                                  balloon.classList.contains('balloon-b4') ? 90 : 80;
+                if (distance < hitDistance) {
                     popBalloon(balloon);
                 }
             });
