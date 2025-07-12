@@ -46,7 +46,7 @@
             text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
         }
         
-        /* Enhanced Crosshair - Better distance from gun */
+        /* Enhanced Crosshair */
         .crosshair {
             position: absolute;
             width: 30px;
@@ -94,43 +94,21 @@
             transform: translateY(-50%);
         }
         
-        /* Dotted Line from Gun to Target - Optimal distance */
-        .dotted-line {
-            position: absolute;
-            height: 2px;
-            background: repeating-linear-gradient(
-                to right,
-                rgba(255, 255, 0, 0.9) 0px,
-                rgba(255, 255, 0, 0.9) 6px,
-                transparent 6px,
-                transparent 12px
-            );
-            transform-origin: left center;
-            z-index: 95;
-            pointer-events: none;
-            box-shadow: 0 0 6px rgba(255, 255, 0, 0.5);
-            animation: dottedPulse 1.5s infinite ease-in-out;
-        }
-        
-        @keyframes dottedPulse {
-            0%, 100% { opacity: 0.7; }
-            50% { opacity: 1; }
-        }
-        
-        /* Laser Sight Line - Very light and extends beyond target */
+        /* Light Laser Sight */
         .laser-sight {
             position: absolute;
             height: 1px;
             background: linear-gradient(to right, 
-                rgba(255, 0, 0, 0.2), 
-                rgba(255, 0, 0, 0.15), 
-                rgba(255, 0, 0, 0.1), 
-                rgba(255, 0, 0, 0.05),
-                transparent);
+                rgba(255, 0, 0, 0.3) 0%,
+                rgba(255, 0, 0, 0.2) 20%,
+                rgba(255, 0, 0, 0.15) 40%,
+                rgba(255, 0, 0, 0.1) 60%,
+                rgba(255, 0, 0, 0.05) 80%,
+                transparent 100%);
             transform-origin: left center;
             z-index: 85;
             pointer-events: none;
-            box-shadow: 0 0 3px rgba(255, 0, 0, 0.15);
+            box-shadow: 0 0 3px rgba(255, 0, 0, 0.2);
         }
         
         /* Gun container - rotatable */
@@ -262,6 +240,114 @@
             }
         }
         
+        /* NEW FEATURE: Power-up Effects */
+        .power-up {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            animation: powerUpFloat 4s infinite ease-in-out;
+            z-index: 25;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 255, 0, 0.8);
+        }
+        
+        @keyframes powerUpFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(180deg); }
+        }
+        
+        .power-up-multi {
+            background: radial-gradient(circle, #ff6b35, #f7931e);
+            border: 3px solid #fff;
+        }
+        
+        .power-up-rapid {
+            background: radial-gradient(circle, #4ecdc4, #44a08d);
+            border: 3px solid #fff;
+        }
+        
+        .power-up-big {
+            background: radial-gradient(circle, #a8e6cf, #7fcdcd);
+            border: 3px solid #fff;
+        }
+        
+        /* NEW FEATURE: Combo System */
+        .combo-display {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            font-weight: bold;
+            color: #ff6b35;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
+            z-index: 200;
+            animation: comboShow 1.5s ease-out forwards;
+            pointer-events: none;
+        }
+        
+        @keyframes comboShow {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+        }
+        
+        /* NEW FEATURE: Moving Balloons */
+        .balloon-zigzag {
+            animation: zigzagMove 6s infinite linear;
+        }
+        
+        @keyframes zigzagMove {
+            0% { transform: translateX(0px); }
+            25% { transform: translateX(50px); }
+            50% { transform: translateX(0px); }
+            75% { transform: translateX(-50px); }
+            100% { transform: translateX(0px); }
+        }
+        
+        /* NEW FEATURE: Special Balloons */
+        .balloon-golden {
+            filter: hue-rotate(45deg) brightness(1.5) saturate(2);
+            animation: goldenGlow 2s infinite ease-in-out;
+        }
+        
+        @keyframes goldenGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+            50% { box-shadow: 0 0 40px rgba(255, 215, 0, 1); }
+        }
+        
+        .balloon-bomb {
+            filter: hue-rotate(180deg) brightness(0.8);
+            animation: bombPulse 1s infinite ease-in-out;
+        }
+        
+        @keyframes bombPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        /* NEW FEATURE: Streak Display */
+        .streak-display {
+            position: fixed;
+            top: 120px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            color: #ff6b35;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            z-index: 100;
+            border: 2px solid #ff6b35;
+            animation: streakPulse 2s infinite ease-in-out;
+        }
+        
+        @keyframes streakPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
         /* Balloon uniform size - larger for all devices */
         .balloon-uniform {
             width: 80px !important;
@@ -343,6 +429,19 @@
             .crosshair::after {
                 width: 25px;
             }
+            .streak-display {
+                top: 80px;
+                right: 10px;
+                font-size: 1rem;
+                padding: 8px 12px;
+            }
+                        .combo-display {
+                font-size: 2rem;
+            }
+            .power-up {
+                width: 35px;
+                height: 35px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -389,6 +488,17 @@
             }
             .crosshair::after {
                 width: 22px;
+            }
+            .streak-display {
+                font-size: 0.9rem;
+                padding: 6px 10px;
+            }
+            .combo-display {
+                font-size: 1.5rem;
+            }
+            .power-up {
+                width: 30px;
+                height: 30px;
             }
         }
         
@@ -447,7 +557,8 @@
     <div id="gameOverScreen" class="hidden fixed inset-0 bg-black/80 z-50 flex flex-col items-center justify-center px-4">
         <h2 class="text-4xl md:text-6xl font-bold text-red-500 mb-8 text-center">Game Over</h2>
         <p class="text-2xl md:text-3xl text-white mb-4 text-center">Final Score: <span id="finalScore" class="text-blue-400 font-bold">0</span></p>
-        <p class="text-xl md:text-2xl text-white mb-8 text-center">Highest Score: <span id="gameOverHighestScore" class="text-yellow-400 font-bold">0</span></p>
+        <p class="text-xl md:text-2xl text-white mb-4 text-center">Highest Score: <span id="gameOverHighestScore" class="text-yellow-400 font-bold">0</span></p>
+        <p class="text-lg md:text-xl text-white mb-8 text-center">Best Streak: <span id="gameOverBestStreak" class="text-green-400 font-bold">0</span></p>
         <button id="playAgainBtn" class="bg-green-500 hover:bg-green-600 active:bg-green-700 text-white font-bold py-3 px-6 rounded-lg text-xl transition-colors play-again-btn">
             Play Again
         </button>
@@ -460,10 +571,17 @@
             <div class="instructions">
                 <div class="font-bold mb-2">🎯 How to Play:</div>
                 <div>• Move mouse/finger to aim</div>
-                <div>• Gun snaps to preset angles</div>
                 <div>• Click GUN to shoot</div>
                 <div>• Hit balloons to score points</div>
-                <div>• Don't let 5 balloons escape!</div>
+                <div>• 🟡 Golden balloons = 20 points</div>
+                <div>• 💣 Bomb balloons = -10 points</div>
+                <div>• Collect power-ups for bonuses!</div>
+                <div>• Build streaks for multipliers!</div>
+            </div>
+            
+            <!-- Streak Display -->
+            <div id="streakDisplay" class="streak-display hidden">
+                Streak: <span id="streakCount">0</span>x
             </div>
             
             <!-- Game Container -->
@@ -472,6 +590,7 @@
                 <div class="flex justify-between items-start mb-4 md:mb-8 score-container w-full">
                     <div class="score-left">
                         <div class="text-2xl md:text-3xl font-bold score-text">Score: <span id="score">0</span></div>
+                        <div class="text-lg md:text-xl font-bold text-purple-600">Multiplier: <span id="multiplier">1</span>x</div>
                     </div>
                     <div class="score-right flex flex-col items-end">
                         <div class="text-2xl md:text-3xl font-bold highest-score-text mb-2">Highest: <span id="highestScore">0</span></div>
@@ -485,15 +604,12 @@
                 
                 <!-- Game Area -->
                 <div id="gameArea" class="relative h-[70vh] md:h-[80vh] game-area-mobile overflow-hidden rounded-3xl">
-                    <!-- Enhanced Crosshair - Better distance from gun -->
+                    <!-- Enhanced Crosshair -->
                     <div id="crosshair" class="crosshair">
                         <div class="crosshair-center"></div>
                     </div>
                     
-                    <!-- Dotted Line from Gun to Target -->
-                    <div id="dottedLine" class="dotted-line"></div>
-                    
-                    <!-- Light Laser Sight extending beyond -->
+                    <!-- Light Laser Sight -->
                     <div id="laserSight" class="laser-sight"></div>
                     
                     <!-- Gun Container - Rotatable -->
@@ -512,30 +628,51 @@
         let missedBalloons = 0;
         let highestScore = 0;
         let balloonIntervals = [];
-        let gunAngle = 90; // Current gun angle
-        let targetAngle = 90; // Target angle to snap to
+        let gunAngle = 90;
+        let targetAngle = 90;
         
-        // All preset angles including 30 and 180
+        // NEW FEATURES: Game state variables
+        let streak = 0;
+        let bestStreak = 0;
+        let multiplier = 1;
+        let powerUpActive = false;
+        let powerUpType = '';
+        let powerUpDuration = 0;
+        let rapidFireMode = false;
+        let multiShotMode = false;
+        let bigBulletsMode = false;
+        
+        // All preset angles
         const presetAngles = [30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180];
         
-        // Balloon configuration with images and points
+        // Enhanced balloon configuration with special types
         const balloonTypes = [
-            { image: 'b1.png', points: 2, class: 'balloon-uniform' },
-            { image: 'b2.png', points: 3, class: 'balloon-b2' },
-            { image: 'b3.png', points: 5, class: 'balloon-b3' },
-            { image: 'b4.png', points: 5, class: 'balloon-b4' },
-            { image: 'b5.png', points: 10, class: 'balloon-uniform' },
-            { image: 'b6.png', points: 7, class: 'balloon-uniform' }
+            { image: 'b1.png', points: 2, class: 'balloon-uniform', type: 'normal' },
+            { image: 'b2.png', points: 3, class: 'balloon-b2', type: 'normal' },
+            { image: 'b3.png', points: 5, class: 'balloon-b3', type: 'normal' },
+            { image: 'b4.png', points: 5, class: 'balloon-b4', type: 'normal' },
+            { image: 'b5.png', points: 10, class: 'balloon-uniform', type: 'normal' },
+            { image: 'b6.png', points: 7, class: 'balloon-uniform', type: 'normal' }
+        ];
+        
+        // Power-up types
+        const powerUpTypes = [
+            { type: 'multi', class: 'power-up-multi', duration: 10000, name: 'Multi Shot' },
+            { type: 'rapid', class: 'power-up-rapid', duration: 8000, name: 'Rapid Fire' },
+            { type: 'big', class: 'power-up-big', duration: 12000, name: 'Big Bullets' }
         ];
         
         const shootSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2771/2771-preview.mp3');
         const popSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2870/2870-preview.mp3');
         const gameOverSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2658/2658-preview.mp3');
         const hitSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3');
+        const powerUpSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3');
+        const comboSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3');
 
         // Game initialization
         window.onload = () => {
             loadHighestScore();
+            loadBestStreak();
             loadGame();
             preloadSounds();
             setupPlayAgainButton();
@@ -565,8 +702,20 @@
             }
         }
 
+        function loadBestStreak() {
+            const saved = localStorage.getItem('balloonCrackerBestStreak');
+            if (saved) {
+                bestStreak = parseInt(saved);
+                updateBestStreak();
+            }
+        }
+
         function saveHighestScore() {
             localStorage.setItem('balloonCrackerHighestScore', highestScore.toString());
+        }
+
+        function saveBestStreak() {
+            localStorage.setItem('balloonCrackerBestStreak', bestStreak.toString());
         }
 
         function updateHighestScore() {
@@ -574,11 +723,17 @@
             document.getElementById('gameOverHighestScore').textContent = highestScore;
         }
 
+        function updateBestStreak() {
+            document.getElementById('gameOverBestStreak').textContent = bestStreak;
+        }
+
         function preloadSounds() {
             shootSound.load();
             popSound.load();
             gameOverSound.load();
             hitSound.load();
+            powerUpSound.load();
+            comboSound.load();
         }
 
         function loadGame() {
@@ -604,7 +759,15 @@
             score = 0;
             lives = 3;
             missedBalloons = 0;
-            gunAngle = 90; // Start pointing straight up
+            streak = 0;
+                       multiplier = 1;
+            powerUpActive = false;
+            powerUpType = '';
+            powerUpDuration = 0;
+            rapidFireMode = false;
+            multiShotMode = false;
+            bigBulletsMode = false;
+            gunAngle = 90;
             targetAngle = 90;
             
             // Clear intervals and balloons
@@ -614,12 +777,19 @@
             const existingBalloons = document.querySelectorAll('.balloon');
             existingBalloons.forEach(balloon => balloon.remove());
             
+            const existingPowerUps = document.querySelectorAll('.power-up');
+            existingPowerUps.forEach(powerUp => powerUp.remove());
+            
             updateScore();
             updateLives();
             updateHighestScore();
+            updateBestStreak();
+            updateStreak();
+            updateMultiplier();
             setupControls();
             updateGunRotation();
             createBalloons();
+            createPowerUps();
         }
 
         function createBalloons() {
@@ -635,9 +805,35 @@
             balloonIntervals.push(interval);
         }
 
+        function createPowerUps() {
+            const interval = setInterval(() => {
+                const currentPowerUps = document.querySelectorAll('.power-up').length;
+                if (currentPowerUps < 2 && Math.random() < 0.3) {
+                    createPowerUp();
+                }
+            }, 15000); // Power-up every 15 seconds
+            
+            balloonIntervals.push(interval);
+        }
+
         function createBalloon() {
             const settings = getOptimalSettings();
-            const balloonType = balloonTypes[Math.floor(Math.random() * balloonTypes.length)];
+            let balloonType = balloonTypes[Math.floor(Math.random() * balloonTypes.length)];
+            
+            // 10% chance for special balloons
+            const specialChance = Math.random();
+            let isSpecial = false;
+            let specialType = 'normal';
+            
+            if (specialChance < 0.05) { // 5% golden balloon
+                specialType = 'golden';
+                balloonType = { ...balloonType, points: 20, type: 'golden' };
+                isSpecial = true;
+            } else if (specialChance < 0.08) { // 3% bomb balloon
+                specialType = 'bomb';
+                balloonType = { ...balloonType, points: -10, type: 'bomb' };
+                isSpecial = true;
+            }
             
             const balloon = document.createElement('img');
             balloon.src = balloonType.image;
@@ -647,9 +843,23 @@
             balloon.style.zIndex = '20';
             
             balloon.dataset.points = balloonType.points;
+            balloon.dataset.type = balloonType.type;
+            
+            // Add special balloon effects
+            if (specialType === 'golden') {
+                balloon.classList.add('balloon-golden');
+            } else if (specialType === 'bomb') {
+                balloon.classList.add('balloon-bomb');
+            }
+            
+            // 30% chance for moving balloons
+            if (Math.random() < 0.3) {
+                balloon.classList.add('balloon-zigzag');
+            }
             
             balloon.onerror = function() {
-                this.style.backgroundColor = '#ff6b6b';
+                this.style.backgroundColor = isSpecial ? 
+                    (specialType === 'golden' ? '#ffd700' : '#ff4444') : '#ff6b6b';
                 this.style.borderRadius = '50% 50% 50% 50% / 60% 60% 40% 40%';
                 this.style.border = '2px solid #ff5252';
                 this.style.width = '60px';
@@ -696,6 +906,10 @@
                                     loseLife();
                                     missedBalloons = 0;
                                 }
+                                // Reset streak on missed balloon
+                                if (balloon.dataset.type !== 'bomb') {
+                                    resetStreak();
+                                }
                             }
                         }, 500);
                         
@@ -716,9 +930,149 @@
                         loseLife();
                         missedBalloons = 0;
                     }
+                    // Reset streak on missed balloon
+                    if (balloon.dataset.type !== 'bomb') {
+                        resetStreak();
+                    }
                 }
                 cancelAnimationFrame(animationFrame);
             };
+        }
+
+        function createPowerUp() {
+            const powerUpType = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)];
+            
+            const powerUp = document.createElement('div');
+            powerUp.className = `power-up ${powerUpType.class}`;
+            powerUp.style.left = `${Math.random() * 80 + 10}%`;
+            powerUp.style.bottom = '-50px';
+            powerUp.dataset.type = powerUpType.type;
+            powerUp.dataset.duration = powerUpType.duration;
+            powerUp.dataset.name = powerUpType.name;
+            
+            // Add power-up icon
+            const icon = document.createElement('div');
+            icon.style.cssText = `
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 20px;
+                font-weight: bold;
+                color: white;
+                text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            `;
+            
+            switch(powerUpType.type) {
+                case 'multi':
+                    icon.textContent = '3x';
+                    break;
+                case 'rapid':
+                    icon.textContent = '⚡';
+                    break;
+                case 'big':
+                    icon.textContent = '💥';
+                    break;
+            }
+            
+            powerUp.appendChild(icon);
+            
+            // Add click handler
+            powerUp.addEventListener('click', () => collectPowerUp(powerUp));
+            powerUp.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                collectPowerUp(powerUp);
+            });
+            
+            document.getElementById('gameArea').appendChild(powerUp);
+            
+            // Animate power-up movement
+            const animation = powerUp.animate([
+                { bottom: '-50px', opacity: 1 },
+                { bottom: 'calc(100% + 50px)', opacity: 0.8 }
+            ], {
+                duration: 12000,
+                easing: 'linear'
+            });
+
+            animation.onfinish = () => {
+                if (powerUp.parentNode) {
+                    powerUp.remove();
+                }
+            };
+        }
+
+        function collectPowerUp(powerUp) {
+            const type = powerUp.dataset.type;
+            const duration = parseInt(powerUp.dataset.duration);
+            const name = powerUp.dataset.name;
+            
+            // Play power-up sound
+            powerUpSound.currentTime = 0;
+            powerUpSound.play().catch(() => {});
+            
+            // Activate power-up
+            activatePowerUp(type, duration, name);
+            
+            // Remove power-up with effect
+            powerUp.style.transform = 'scale(2)';
+            powerUp.style.opacity = '0';
+            
+            setTimeout(() => {
+                if (powerUp.parentNode) {
+                    powerUp.remove();
+                }
+            }, 300);
+            
+            // Show power-up notification
+            showPowerUpNotification(name, duration);
+        }
+
+        function activatePowerUp(type, duration, name) {
+            powerUpActive = true;
+            powerUpType = type;
+            powerUpDuration = duration;
+            
+            switch(type) {
+                case 'multi':
+                    multiShotMode = true;
+                    break;
+                case 'rapid':
+                    rapidFireMode = true;
+                    break;
+                case 'big':
+                    bigBulletsMode = true;
+                    break;
+            }
+            
+            // Set timeout to deactivate power-up
+            setTimeout(() => {
+                deactivatePowerUp();
+            }, duration);
+        }
+
+        function deactivatePowerUp() {
+            powerUpActive = false;
+            multiShotMode = false;
+            rapidFireMode = false;
+            bigBulletsMode = false;
+            powerUpType = '';
+            powerUpDuration = 0;
+        }
+
+        function showPowerUpNotification(name, duration) {
+            const notification = document.createElement('div');
+            notification.className = 'combo-display';
+            notification.textContent = `${name} Activated!`;
+            notification.style.color = '#4ecdc4';
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 1500);
         }
 
         function setupControls() {
@@ -774,35 +1128,28 @@
             const rect = gameArea.getBoundingClientRect();
             
             // Calculate mouse position relative to gun position
-            const gunX = rect.left + rect.width / 2; // Gun is centered
-            const gunY = rect.bottom - 50; // Gun position from bottom
+            const gunX = rect.left + rect.width / 2;
+            const gunY = rect.bottom - 50;
             
             const mouseX = e.clientX;
             const mouseY = e.clientY;
             
-            // Calculate angle from gun to mouse - PERFECT ALIGNMENT
+            // Calculate angle from gun to mouse
             const deltaX = mouseX - gunX;
-            const deltaY = gunY - mouseY; // Inverted Y axis
+            const deltaY = gunY - mouseY;
             
-            // Calculate angle in degrees using atan2
             let angle = Math.atan2(deltaX, deltaY) * (180 / Math.PI);
-            
-            // Convert to our gun angle system (0° = straight up = 90° in our system)
             let gunAngleCalculated = 90 - angle;
             
-            // Normalize to 0-360 range
             if (gunAngleCalculated < 0) gunAngleCalculated += 360;
             if (gunAngleCalculated > 360) gunAngleCalculated -= 360;
             
-            // Convert to our range (30° to 180°)
             if (gunAngleCalculated > 180) {
                 gunAngleCalculated = 360 - gunAngleCalculated;
             }
             
-            // Clamp to valid range (30° to 180°)
             gunAngleCalculated = Math.max(30, Math.min(180, gunAngleCalculated));
             
-            // Find closest preset angle
             targetAngle = findClosestAngle(gunAngleCalculated);
             snapToAngle();
         }
@@ -813,36 +1160,27 @@
             const rect = gameArea.getBoundingClientRect();
             const touch = e.touches[0];
             
-            // Calculate touch position relative to gun position
-            const gunX = rect.left + rect.width / 2; // Gun is centered
-            const gunY = rect.bottom - 50; // Gun position from bottom
+            const gunX = rect.left + rect.width / 2;
+            const gunY = rect.bottom - 50;
             
             const touchX = touch.clientX;
             const touchY = touch.clientY;
             
-            // Calculate angle from gun to touch - PERFECT ALIGNMENT
             const deltaX = touchX - gunX;
-            const deltaY = gunY - touchY; // Inverted Y axis
+            const deltaY = gunY - touchY;
             
-            // Calculate angle in degrees using atan2
             let angle = Math.atan2(deltaX, deltaY) * (180 / Math.PI);
-            
-            // Convert to our gun angle system (0° = straight up = 90° in our system)
             let gunAngleCalculated = 90 - angle;
             
-            // Normalize to 0-360 range
             if (gunAngleCalculated < 0) gunAngleCalculated += 360;
             if (gunAngleCalculated > 360) gunAngleCalculated -= 360;
             
-            // Convert to our range (30° to 180°)
             if (gunAngleCalculated > 180) {
                 gunAngleCalculated = 360 - gunAngleCalculated;
             }
             
-            // Clamp to valid range (30° to 180°)
             gunAngleCalculated = Math.max(30, Math.min(180, gunAngleCalculated));
             
-            // Find closest preset angle
             targetAngle = findClosestAngle(gunAngleCalculated);
             snapToAngle();
         }
@@ -854,10 +1192,8 @@
         }
 
         function findClosestAngle(inputAngle) {
-            // Clamp input angle to valid range
-            inputAngle = Math.max(30, Math.min(180, inputAngle));
+                       inputAngle = Math.max(30, Math.min(180, inputAngle));
             
-            // Find the closest preset angle
             let closestAngle = presetAngles[0];
             let minDifference = Math.abs(inputAngle - presetAngles[0]);
             
@@ -881,93 +1217,53 @@
             const gunContainer = document.getElementById('gunContainer');
             const crosshair = document.getElementById('crosshair');
             const laserSight = document.getElementById('laserSight');
-            const dottedLine = document.getElementById('dottedLine');
             
-            // Gun rotation calculation - PERFECT ALIGNMENT
             const rotationAngle = gunAngle - 90;
             
-            // Rotate gun smoothly
             gunContainer.style.transform = `translateX(-50%) rotate(${rotationAngle}deg)`;
             
-            // Hide crosshair, laser and dotted line at extreme angles (30° and 180°)
             if (gunAngle === 30 || gunAngle === 180) {
                 crosshair.style.opacity = '0';
                 laserSight.style.opacity = '0';
-                dottedLine.style.opacity = '0';
             } else {
                 crosshair.style.opacity = '1';
-                laserSight.style.opacity = '0.3'; // Very light laser
-                dottedLine.style.opacity = '0.8';
+                laserSight.style.opacity = '0.4';
                 
-                // FIXED: Calculate crosshair position at OPTIMAL DISTANCE from gun
                 const gameArea = document.getElementById('gameArea');
-                const rect = gameArea.getBoundingClientRect();
+                const gunX = 50;
+                const gunY = 95;
                 
-                // Gun position (center bottom)
-                const gunX = 50; // 50% from left
-                const gunY = 95; // 95% from top (near bottom)
-                
-                // OPTIMAL DISTANCE - Perfect balance between close and far
                 const angleRad = (gunAngle - 90) * (Math.PI / 180);
-                
-                // INCREASED DISTANCE - More comfortable aiming distance
-                const aimDistance = 35; // INCREASED from 15 to 35 - Better aiming distance
+                const aimDistance = 35;
                 const aimX = gunX + (Math.sin(angleRad) * aimDistance);
                 const aimY = gunY - (Math.cos(angleRad) * aimDistance);
                 
-                // Clamp crosshair within game area
                 const clampedAimX = Math.max(8, Math.min(92, aimX));
                 const clampedAimY = Math.max(8, Math.min(92, aimY));
                 
-                // Position crosshair at optimal distance
                 crosshair.style.left = `${clampedAimX}%`;
                 crosshair.style.top = `${clampedAimY}%`;
                 crosshair.style.transform = 'translate(-50%, -50%)';
                 
-                // Update dotted line and laser sight
-                updateAimingElements();
+                updateLaserSight();
             }
         }
 
-        function updateAimingElements() {
+        function updateLaserSight() {
             const laserSight = document.getElementById('laserSight');
-            const dottedLine = document.getElementById('dottedLine');
-            const crosshair = document.getElementById('crosshair');
             const gameArea = document.getElementById('gameArea');
             const rect = gameArea.getBoundingClientRect();
             
-            // Calculate gun barrel position - PERFECT ALIGNMENT
             const gunX = rect.width * 0.5;
             const gunY = rect.height * 0.95;
             
-            // Calculate barrel offset based on EXACT gun rotation
             const angleRad = (gunAngle - 90) * (Math.PI / 180);
-            const barrelLength = 35; // Distance from gun center to barrel tip
+            const barrelLength = 35;
             
-            // Calculate actual barrel position - PERFECT ALIGNMENT
             const barrelX = gunX + Math.sin(angleRad) * barrelLength;
             const barrelY = gunY - Math.cos(angleRad) * barrelLength;
             
-            // Get crosshair position in pixels
-            const crosshairRect = crosshair.getBoundingClientRect();
-            const gameAreaRect = gameArea.getBoundingClientRect();
-            const crosshairX = crosshairRect.left + crosshairRect.width/2 - gameAreaRect.left;
-            const crosshairY = crosshairRect.top + crosshairRect.height/2 - gameAreaRect.top;
-            
-            // Calculate distance from barrel to crosshair
-            const deltaX = crosshairX - barrelX;
-            const deltaY = crosshairY - barrelY;
-            const distanceToTarget = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-            
-            // Dotted line from barrel to crosshair - OPTIMAL DISTANCE
-            dottedLine.style.left = `${barrelX}px`;
-            dottedLine.style.top = `${barrelY}px`;
-            dottedLine.style.width = `${distanceToTarget}px`; // Distance to crosshair
-            dottedLine.style.transform = `rotate(${gunAngle - 90}deg)`;
-            dottedLine.style.transformOrigin = 'left center';
-            
-            // Laser sight extending BEYOND crosshair - CONTINUES THE LINE
-            const laserLength = 400; // Long laser extending beyond crosshair
+            const laserLength = 400;
             laserSight.style.left = `${barrelX}px`;
             laserSight.style.top = `${barrelY}px`;
             laserSight.style.width = `${laserLength}px`;
@@ -988,14 +1284,22 @@
 
             // Create effects
             createMuzzleFlash();
-            createBulletTrail();
             
-            // Check for hits with PERFECT ALIGNMENT
+            // Multi-shot mode
+            if (multiShotMode) {
+                createBulletTrail();
+                setTimeout(() => createBulletTrail(), 100);
+                setTimeout(() => createBulletTrail(), 200);
+            } else {
+                createBulletTrail();
+            }
+            
+            // Check for hits
             const hit = checkHits();
             
             if (!hit) {
-                // Show miss indicator
                 showMissIndicator();
+                resetStreak();
             }
             
             // Vibration feedback
@@ -1007,9 +1311,8 @@
             const flash = document.createElement('div');
             flash.className = 'muzzle-flash';
             
-            // Position flash at gun barrel tip - PERFECT ALIGNMENT
             const angleRad = (gunAngle - 90) * (Math.PI / 180);
-            const barrelDistance = 35; // Distance from gun center to barrel
+            const barrelDistance = 35;
             
             const flashX = Math.sin(angleRad) * barrelDistance;
             const flashY = -Math.cos(angleRad) * barrelDistance;
@@ -1032,31 +1335,35 @@
             const trail = document.createElement('div');
             trail.className = 'bullet-trail';
             
-            // Calculate bullet starting position - PERFECT ALIGNMENT
-            const rect = gameArea.getBoundingClientRect();
-            const gunX = 50; // Gun X position as percentage
-            const gunY = 95; // Gun Y position as percentage
+            // Enhanced bullet for big bullets mode
+            if (bigBulletsMode) {
+                trail.style.width = '10px';
+                trail.style.height = '50px';
+                trail.style.boxShadow = '0 0 20px rgba(255, 255, 0, 1)';
+            }
             
-            // Calculate barrel offset - PERFECT ALIGNMENT
+            const rect = gameArea.getBoundingClientRect();
+            const gunX = 50;
+            const gunY = 95;
+            
             const angleRad = (gunAngle - 90) * (Math.PI / 180);
-            const barrelOffset = 5; // Percentage offset for barrel
+            const barrelOffset = 5;
             
             const startX = gunX + Math.sin(angleRad) * barrelOffset;
             const startY = gunY - Math.cos(angleRad) * barrelOffset;
             
-            // Calculate bullet trajectory - PERFECT ALIGNMENT
-            const bulletDistance = 60; // How far bullet travels (percentage)
+            const bulletDistance = 60;
             const bulletEndX = startX + Math.sin(angleRad) * bulletDistance;
             const bulletEndY = startY - Math.cos(angleRad) * bulletDistance;
             
-            // Position bullet trail - PERFECT ALIGNMENT
             trail.style.left = `${startX}%`;
             trail.style.top = `${startY}%`;
             trail.style.transform = `translate(-50%, -50%) rotate(${gunAngle - 90}deg)`;
             
             gameArea.appendChild(trail);
             
-            // Animate bullet movement - PERFECT ALIGNMENT
+            const animationDuration = rapidFireMode ? 200 : 400;
+            
             trail.animate([
                 { 
                     left: `${startX}%`, 
@@ -1069,7 +1376,7 @@
                     opacity: 0 
                 }
             ], {
-                duration: 400,
+                duration: animationDuration,
                 easing: 'ease-out'
             }).onfinish = () => {
                 if (trail.parentNode) {
@@ -1083,18 +1390,15 @@
             const rect = gameArea.getBoundingClientRect();
             const balloons = document.querySelectorAll('.balloon');
             
-            // Calculate gun barrel position - PERFECT ALIGNMENT
             const gunPixelX = rect.left + (rect.width * 0.5);
             const gunPixelY = rect.top + (rect.height * 0.95);
             
-            // Calculate barrel offset - PERFECT ALIGNMENT
             const angleRad = (gunAngle - 90) * (Math.PI / 180);
-            const barrelOffset = 35; // Pixel offset for barrel
+            const barrelOffset = 35;
             
             const barrelX = gunPixelX + Math.sin(angleRad) * barrelOffset;
             const barrelY = gunPixelY - Math.cos(angleRad) * barrelOffset;
             
-            // Calculate trajectory direction - PERFECT ALIGNMENT
             const trajectoryDirX = Math.sin(angleRad);
             const trajectoryDirY = -Math.cos(angleRad);
 
@@ -1105,35 +1409,29 @@
                 const balloonCenterX = balloonRect.left + balloonRect.width / 2;
                 const balloonCenterY = balloonRect.top + balloonRect.height / 2;
                 
-                // Calculate vector from barrel to balloon
                 const toBalloonX = balloonCenterX - barrelX;
                 const toBalloonY = balloonCenterY - barrelY;
                 
-                // Calculate distance from balloon to trajectory line
                 const crossProduct = Math.abs(
                     trajectoryDirX * toBalloonY - trajectoryDirY * toBalloonX
                 );
                 
-                // Calculate dot product to check if balloon is in front of gun
                 const dotProduct = trajectoryDirX * toBalloonX + trajectoryDirY * toBalloonY;
                 
-                // Enhanced hit detection based on balloon size
-                let hitRadius = 50; // Increased base hit radius for better targeting
+                let hitRadius = bigBulletsMode ? 70 : 50;
                 if (balloon.classList.contains('balloon-b2') || 
                     balloon.classList.contains('balloon-b3') || 
                     balloon.classList.contains('balloon-b4')) {
-                    hitRadius = 60; // Larger hit radius for bigger balloons
+                    hitRadius += 10;
                 }
                 
-                // Mobile adjustment - more forgiving hit detection
                 if (window.innerWidth <= 768) {
                     hitRadius *= 1.4;
                 }
                 
-                // Check if balloon is hit (close to trajectory line and in front of gun)
                 if (crossProduct <= hitRadius && dotProduct > 0) {
                     popBalloon(balloon);
-                                        showHitMarker(balloonCenterX - rect.left, balloonCenterY - rect.top);
+                    showHitMarker(balloonCenterX - rect.left, balloonCenterY - rect.top);
                     hitDetected = true;
                 }
             });
@@ -1167,17 +1465,15 @@
             missIndicator.style.color = '#ff4444';
             missIndicator.style.fontSize = '1.5rem';
             
-            // Position miss indicator at OPTIMAL DISTANCE from gun
             const rect = gameArea.getBoundingClientRect();
             const gunX = rect.width * 0.5;
             const gunY = rect.height * 0.95;
             
             const angleRad = (gunAngle - 90) * (Math.PI / 180);
-            const barrelOffset = 35;
-            const missDistance = 150; // Optimal distance for miss indicator
+            const missDistance = 150;
             
-            const barrelX = gunX + Math.sin(angleRad) * barrelOffset;
-            const barrelY = gunY - Math.cos(angleRad) * barrelOffset;
+            const barrelX = gunX + Math.sin(angleRad) * 35;
+            const barrelY = gunY - Math.cos(angleRad) * 35;
             
             const missX = barrelX + Math.sin(angleRad) * missDistance;
             const missY = barrelY - Math.cos(angleRad) * missDistance;
@@ -1202,12 +1498,26 @@
             hitSound.currentTime = 0;
             hitSound.play().catch(() => {});
             
-            // Get points
+            // Get points and type
             const points = parseInt(balloon.dataset.points);
-            score += points;
+            const balloonType = balloon.dataset.type;
             
-            // Show points popup
-            showPointsPopup(balloon, points);
+            // Handle different balloon types
+            if (balloonType === 'bomb') {
+                // Bomb balloon - lose points and reset streak
+                score = Math.max(0, score + points); // points is negative
+                resetStreak();
+                showPointsPopup(balloon, points, '#ff4444');
+            } else {
+                // Normal or golden balloon
+                const finalPoints = points * multiplier;
+                score += finalPoints;
+                
+                // Increase streak
+                increaseStreak();
+                
+                showPointsPopup(balloon, finalPoints, balloonType === 'golden' ? '#ffd700' : '#00ff00');
+            }
             
             // Check highest score
             if (score > highestScore) {
@@ -1234,10 +1544,83 @@
             }, 400);
         }
 
-        function showPointsPopup(balloon, points) {
+        function increaseStreak() {
+            streak++;
+            updateStreak();
+            
+            // Update multiplier based on streak
+            if (streak >= 10) {
+                multiplier = 3;
+            } else if (streak >= 5) {
+                multiplier = 2;
+            } else {
+                multiplier = 1;
+            }
+            updateMultiplier();
+            
+            // Show combo notifications
+            if (streak === 5) {
+                showComboNotification('5 Hit Combo!', '#ff6b35');
+                comboSound.play().catch(() => {});
+            } else if (streak === 10) {
+                showComboNotification('10 Hit Combo!', '#ff4444');
+                comboSound.play().catch(() => {});
+            } else if (streak % 15 === 0) {
+                showComboNotification(`${streak} Hit Combo!`, '#9b59b6');
+                comboSound.play().catch(() => {});
+            }
+            
+            // Update best streak
+            if (streak > bestStreak) {
+                bestStreak = streak;
+                saveBestStreak();
+                updateBestStreak();
+            }
+        }
+
+        function resetStreak() {
+            streak = 0;
+            multiplier = 1;
+            updateStreak();
+            updateMultiplier();
+        }
+
+        function updateStreak() {
+            const streakDisplay = document.getElementById('streakDisplay');
+            const streakCount = document.getElementById('streakCount');
+            
+            if (streak > 0) {
+                streakDisplay.classList.remove('hidden');
+                streakCount.textContent = streak;
+            } else {
+                streakDisplay.classList.add('hidden');
+            }
+        }
+
+        function updateMultiplier() {
+            document.getElementById('multiplier').textContent = multiplier;
+        }
+
+                function showComboNotification(text, color) {
+            const notification = document.createElement('div');
+            notification.className = 'combo-display';
+            notification.textContent = text;
+            notification.style.color = color;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 1500);
+        }
+
+        function showPointsPopup(balloon, points, color) {
             const popup = document.createElement('div');
             popup.className = 'points-popup';
-            popup.textContent = `+${points}`;
+            popup.textContent = points > 0 ? `+${points}` : `${points}`;
+            popup.style.color = color;
             
             // Position at balloon location
             const balloonRect = balloon.getBoundingClientRect();
@@ -1263,6 +1646,7 @@
         function loseLife() {
             lives--;
             updateLives();
+            resetStreak();
             
             if (lives <= 0) {
                 gameOver();
@@ -1282,9 +1666,13 @@
             balloonIntervals.forEach(interval => clearInterval(interval));
             balloonIntervals = [];
             
-            // Update final score and highest score
+            // Deactivate power-ups
+            deactivatePowerUp();
+            
+            // Update final scores
             document.getElementById('finalScore').textContent = score;
             updateHighestScore();
+            updateBestStreak();
             
             document.getElementById('gameOverScreen').classList.remove('hidden');
         }
@@ -1328,7 +1716,7 @@
             updateGunRotation();
         });
 
-        // Auto-hide instructions after 10 seconds
+        // Auto-hide instructions after 15 seconds
         setTimeout(() => {
             const instructions = document.querySelector('.instructions');
             if (instructions) {
@@ -1338,7 +1726,7 @@
                     instructions.style.display = 'none';
                 }, 1000);
             }
-        }, 10000);
+        }, 15000);
 
         // Enhanced mobile touch handling for better gun control
         let touchStartTime = 0;
@@ -1368,7 +1756,6 @@
                 const touchX = touchStartPos.x;
                 const touchY = touchStartPos.y;
                 
-                // Calculate angle from gun to touch point - PERFECT ALIGNMENT
                 const gunX = rect.left + rect.width / 2;
                 const gunY = rect.bottom - 50;
                 
@@ -1376,23 +1763,17 @@
                 const deltaY = gunY - touchY;
                 
                 let angle = Math.atan2(deltaX, deltaY) * (180 / Math.PI);
-                
-                // Convert to our gun angle system
                 let gunAngleCalculated = 90 - angle;
                 
-                // Normalize to 0-360 range
                 if (gunAngleCalculated < 0) gunAngleCalculated += 360;
                 if (gunAngleCalculated > 360) gunAngleCalculated -= 360;
                 
-                // Convert to our range (30° to 180°)
                 if (gunAngleCalculated > 180) {
                     gunAngleCalculated = 360 - gunAngleCalculated;
                 }
                 
-                // Clamp to valid range
                 gunAngleCalculated = Math.max(30, Math.min(180, gunAngleCalculated));
                 
-                // Find closest preset angle
                 targetAngle = findClosestAngle(gunAngleCalculated);
                 snapToAngle();
             }
@@ -1453,22 +1834,16 @@
 
         // Debug functions
         function debugInfo() {
-            console.log('🎯 OPTIMAL DISTANCE AIMING - Balloon Shooter Debug Info:');
+            console.log('🎯 ENHANCED BALLOON SHOOTER - Debug Info:');
             console.log(`Current Gun Angle: ${gunAngle}°`);
             console.log(`Target Angle: ${targetAngle}°`);
-            console.log(`Available Angles: ${presetAngles.join(', ')}°`);
             console.log(`Score: ${score}, Lives: ${lives}`);
+            console.log(`Streak: ${streak}, Multiplier: ${multiplier}x`);
+            console.log(`Best Streak: ${bestStreak}`);
+            console.log(`Power-up Active: ${powerUpActive} (${powerUpType})`);
             console.log(`Balloons on screen: ${document.querySelectorAll('.balloon').length}`);
+            console.log(`Power-ups on screen: ${document.querySelectorAll('.power-up').length}`);
             console.log(`Sound enabled: ${soundEnabled}`);
-            console.log('✅ OPTIMAL DISTANCE AIMING FEATURES:');
-            console.log('  • Crosshair positioned at OPTIMAL DISTANCE (35px from gun)');
-            console.log('  • Enhanced crosshair with cross lines (30x30px)');
-            console.log('  • Dotted line from gun barrel to crosshair (pulsing animation)');
-            console.log('  • Light laser sight extending beyond crosshair');
-            console.log('  • Enhanced hit detection (50-60px radius)');
-            console.log('  • Perfect alignment: Gun → Dotted Line → Crosshair → Laser → Bullet');
-            console.log('  • Mobile optimized: 40% larger hit areas');
-            console.log('  • Clean interface: No angle display clutter');
         }
 
         // Keyboard shortcuts for debugging and control
@@ -1501,35 +1876,38 @@
 
         // Initialize game with welcome message
         function showWelcomeMessage() {
-            console.log('🎯 OPTIMAL DISTANCE AIMING - Balloon Shooter Loaded!');
-            console.log('🔧 AIMING DISTANCE IMPROVEMENTS:');
-            console.log('  ✅ Crosshair distance: 15px → 35px (OPTIMAL DISTANCE)');
-            console.log('  ✅ Enhanced crosshair: 30x30px with cross lines');
-            console.log('  ✅ Dotted line: Gun barrel to crosshair (pulsing animation)');
-            console.log('  ✅ Light laser sight: Extends beyond crosshair');
-            console.log('  ✅ Enhanced hit detection: 50-60px radius');
-            console.log('  ✅ Perfect visual flow: Gun → Dotted Line → Crosshair → Laser');
-            console.log('  ✅ Mobile optimization: 40% larger hit areas');
-            console.log('  ✅ Clean interface: No angle display');
-            console.log('🔫 Gun Angles: 30°, 45°, 60°, 75°, 90°, 105°, 120°, 135°, 150°, 165°, 180°');
-            console.log('🎮 Controls:');
-            console.log('  • Move mouse/finger to aim (snaps to preset angles)');
-            console.log('  • Click GUN to shoot');
-            console.log('  • Arrow keys: Left/Right to cycle angles');
-            console.log('  • Number keys 1-9: Quick angle selection');
-            console.log('  • R: Reset to center (90°)');
+            console.log('🎯 ENHANCED BALLOON SHOOTER - Game Loaded!');
+            console.log('🚀 NEW FEATURES ADDED:');
+            console.log('  ✅ Power-ups: Multi-shot, Rapid Fire, Big Bullets');
+            console.log('  ✅ Special Balloons: Golden (+20 pts), Bomb (-10 pts)');
+            console.log('  ✅ Moving Balloons: Zigzag pattern (30% chance)');
+            console.log('  ✅ Streak System: Build combos for multipliers');
+            console.log('  ✅ Multiplier System: 1x → 2x → 3x based on streak');
+            console.log('  ✅ Enhanced Visuals: Glowing effects, animations');
+            console.log('  ✅ Sound Effects: Power-ups, combos, enhanced audio');
+            console.log('  ✅ Mobile Optimized: Better touch controls');
+            console.log('🎮 GAME MECHANICS:');
+            console.log('  • Normal Balloons: 2-10 points');
+            console.log('  • Golden Balloons: 20 points (5% spawn rate)');
+            console.log('  • Bomb Balloons: -10 points (3% spawn rate)');
+            console.log('  • Moving Balloons: Zigzag movement (30% chance)');
+            console.log('  • Power-ups: Spawn every 15 seconds');
+            console.log('  • Streak Multipliers: 5+ hits = 2x, 10+ hits = 3x');
+            console.log('  • Combo Notifications: 5, 10, 15+ hit streaks');
+            console.log('🔫 POWER-UPS:');
+            console.log('  • 🟠 Multi-shot (3x): Fires 3 bullets (10s duration)');
+            console.log('  • ⚡ Rapid Fire: Faster shooting (8s duration)');
+            console.log('  • 💥 Big Bullets: Larger hit area (12s duration)');
+            console.log('🎯 CONTROLS:');
+            console.log('  • Mouse/Touch: Aim gun');
+            console.log('  • Click Gun: Shoot');
+            console.log('  • Click Power-ups: Collect them');
+            console.log('  • Space: Shoot (keyboard)');
+            console.log('  • Arrow Keys: Cycle angles');
+            console.log('  • Number Keys 1-9: Quick angle selection');
+            console.log('  • R: Reset to center');
             console.log('  • S: Toggle sound');
             console.log('  • D: Debug info');
-            console.log('🎯 OPTIMAL DISTANCE TARGETING FEATURES:');
-            console.log('  • Enhanced crosshair (30x30px) with cross lines');
-            console.log('  • OPTIMAL DISTANCE: Crosshair 35px from gun (perfect balance)');
-            console.log('  • Dotted line from gun barrel to crosshair (pulsing animation)');
-            console.log('  • Light laser sight extending beyond target');
-            console.log('  • Enhanced hit detection (50px base radius, 60px for large balloons)');
-            console.log('  • Mobile-optimized targeting (40% larger hit area)');
-            console.log('  • Perfect visual flow: Gun barrel → Dotted line → Crosshair → Laser');
-            console.log('  • CLEAN INTERFACE - No angle display clutter');
-            console.log('  • All aiming elements hidden at extreme angles (30°, 180°)');
         }
 
         // Show welcome message after game loads
@@ -1562,32 +1940,22 @@
             requestAnimationFrame(monitorPerformance);
         }, 3000);
 
-        console.log('🎯 OPTIMAL DISTANCE AIMING - Balloon Shooter Loaded Successfully!');
-        console.log('✅ PERFECT AIMING SYSTEM ACTIVE:');
-        console.log('  🎯 Crosshair: OPTIMAL DISTANCE (35px from gun)');
-        console.log('  🟡 Dotted line: Gun barrel to crosshair (pulsing)');
-        console.log('  🔴 Laser sight: Light extension beyond crosshair');
-        console.log('  💥 Enhanced hit detection: 50-60px radius');
-        console.log('  📱 Mobile optimized: 40% larger hit areas');
-        console.log('  🧹 Clean interface: No angle display clutter');
-        console.log('🎮 OPTIMAL DISTANCE TARGETING SYSTEM NOW ACTIVE!');
-        console.log('🚫 All aiming elements hidden at 30° and 180° angles');
-        console.log('🔴 Perfect balance: Not too close, not too far - OPTIMAL AIMING DISTANCE!');
-        console.log('');
-        console.log('🌟 KEY IMPROVEMENTS:');
-        console.log('  • Crosshair distance: 15px → 35px (OPTIMAL for comfortable aiming)');
-        console.log('  • Enhanced crosshair: 30x30px with cross lines and glow');
-        console.log('  • Dotted line: Pulsing animation from barrel to crosshair');
-        console.log('  • Laser sight: Light, extends beyond crosshair');
-        console.log('  • Hit detection: Enhanced 50-60px radius');
-        console.log('  • Visual flow: Gun → Dotted line → Crosshair → Laser → Bullet');
-        console.log('  • Mobile optimization: 40% larger hit areas');
-        console.log('  • Perfect alignment: All elements perfectly aligned');
-        console.log('  • Clean interface: No distracting angle display');
+        console.log('🎯 ENHANCED BALLOON SHOOTER - Loaded Successfully!');
+        console.log('🚀 EXCITING NEW FEATURES:');
+        console.log('  🎯 Clean targeting system with crosshair and laser sight');
+        console.log('  🟡 Golden balloons worth 20 points');
+        console.log('  💣 Bomb balloons that reduce score');
+        console.log('  🔄 Moving balloons with zigzag patterns');
+        console.log('  ⚡ Power-ups: Multi-shot, Rapid Fire, Big Bullets');
+        console.log('  🔥 Streak system with score multipliers');
+        console.log('  🎊 Combo notifications and effects');
+        console.log('  📱 Enhanced mobile controls');
+        console.log('  🔊 Rich sound effects and audio feedback');
+        console.log('  ✨ Smooth animations and visual effects');
+        console.log('🎮 ENHANCED BALLOON SHOOTER IS READY TO PLAY!');
     </script>
 </body>
 </html>
-
 
 
 
