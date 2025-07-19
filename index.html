@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,10 +11,17 @@
             transition: all 0.3s ease;
             animation: float 3s infinite alternate;
         }
+
         @keyframes float {
-            from { transform: translateY(0px) rotate(5deg); }
-            to { transform: translateY(-20px) rotate(-5deg); }
+            from {
+                transform: translateY(0px) rotate(5deg);
+            }
+
+            to {
+                transform: translateY(-20px) rotate(-5deg);
+            }
         }
+
         .game-background {
             background-image: url('back3.jpeg');
             background-size: cover;
@@ -22,224 +30,343 @@
             position: relative;
             overflow: hidden;
         }
+
         .gun {
-            transition: transform 0.1s ease;
-            transform-origin: center bottom;
+            transition: none;
+            transform: none !important;
             cursor: crosshair;
         }
+
         .heart-container {
-            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
         }
+
         .loading-balloon {
             animation: loadingFloat 2s infinite ease-in-out;
         }
+
         @keyframes loadingFloat {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
         }
+
         .score-text {
             color: #1e3a8a;
-            text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
         }
+
         .highest-score-text {
             color: #dc2626;
-            text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
         }
-        
-        /* Enhanced Crosshair */
-        .crosshair {
+
+        /* Difficulty Selection Screen */
+        .difficulty-screen {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .difficulty-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .difficulty-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .difficulty-easy {
+            border-left: 6px solid #10b981;
+        }
+
+        .difficulty-medium {
+            border-left: 6px solid #f59e0b;
+        }
+
+        .difficulty-hard {
+            border-left: 6px solid #ef4444;
+        }
+
+        .difficulty-btn {
+            transition: all 0.3s ease;
+        }
+
+        .difficulty-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .difficulty-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Enhanced Target Pointer - Larger and More Visible */
+        .target-pointer {
             position: absolute;
-            width: 30px;
-            height: 30px;
+            width: 60px;
+            height: 60px;
             pointer-events: none;
             z-index: 100;
             transition: all 0.1s ease;
+            cursor: crosshair;
         }
-        
-        .crosshair-center {
+
+        .target-center {
             position: absolute;
-            width: 12px;
-            height: 12px;
+            width: 24px;
+            height: 24px;
             background: #ff0000;
-            border: 2px solid #ffffff;
+            border: 4px solid #ffffff;
             border-radius: 50%;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.9), 0 0 30px rgba(255, 0, 0, 0.4);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.8), 0 0 30px rgba(255, 0, 0, 0.4);
         }
-        
-        /* Enhanced crosshair with cross lines */
-        .crosshair::before,
-        .crosshair::after {
+
+        /* Enhanced target pointer with cross lines - Larger */
+        .target-pointer::before,
+        .target-pointer::after {
             content: '';
             position: absolute;
             background: #ff0000;
-            box-shadow: 0 0 8px rgba(255, 0, 0, 0.7);
+            box-shadow: 0 0 8px rgba(255, 0, 0, 0.6);
         }
-        
-        .crosshair::before {
-            width: 2px;
-            height: 30px;
+
+        .target-pointer::before {
+            width: 4px;
+            height: 60px;
             left: 50%;
             top: 0;
             transform: translateX(-50%);
         }
-        
-        .crosshair::after {
-            width: 30px;
-            height: 2px;
+
+        .target-pointer::after {
+            width: 60px;
+            height: 4px;
             top: 50%;
             left: 0;
             transform: translateY(-50%);
         }
-        
-        /* Light Laser Sight */
-        .laser-sight {
+
+        /* FIXED: Laser Light Direction - Now follows target pointer direction - REDUCED INTENSITY */
+        .laser-line {
             position: absolute;
-            height: 1px;
-            background: linear-gradient(to right, 
-                rgba(255, 0, 0, 0.3) 0%,
-                rgba(255, 0, 0, 0.2) 20%,
-                rgba(255, 0, 0, 0.15) 40%,
-                rgba(255, 0, 0, 0.1) 60%,
-                rgba(255, 0, 0, 0.05) 80%,
-                transparent 100%);
+            height: 2px;
+            background: linear-gradient(to right,
+                    rgba(255, 0, 0, 0.4) 0%,
+                    rgba(255, 0, 0, 0.3) 20%,
+                    rgba(255, 0, 0, 0.2) 40%,
+                    rgba(255, 0, 0, 0.1) 60%,
+                    rgba(255, 0, 0, 0.05) 80%,
+                    transparent 100%);
             transform-origin: left center;
             z-index: 85;
             pointer-events: none;
-            box-shadow: 0 0 3px rgba(255, 0, 0, 0.2);
+            box-shadow: 0 0 4px rgba(255, 0, 0, 0.3);
+            animation: laserPulse 2s infinite ease-in-out;
         }
-        
-        /* Gun container - rotatable */
+
+        @keyframes laserPulse {
+
+            0%,
+            100% {
+                opacity: 0.4;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        /* Gun container - Fixed position, no rotation */
         .gun-container {
-            transition: all 0.1s ease;
-            transform-origin: center bottom;
+            transition: none;
+            transform: translateX(-50%) !important;
             cursor: crosshair;
         }
-        
+
         .gun-container:hover {
-            transform: translateX(-50%) scale(1.05);
+            transform: translateX(-50%) scale(1.05) !important;
         }
-        
+
         .gun-container:active {
-            transform: translateX(-50%) scale(0.95);
+            transform: translateX(-50%) scale(0.95) !important;
         }
-        
+
+        /* Original Gun Image Styles */
+        .original-gun {
+            width: 120px;
+            height: 80px;
+            cursor: crosshair;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+            transition: all 0.2s ease;
+        }
+
+        .original-gun:hover {
+            filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4)) brightness(1.1);
+        }
+
+        .original-gun:active {
+            transform: translateY(2px);
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
         /* Muzzle flash effect */
         .muzzle-flash {
             position: absolute;
-            width: 35px;
-            height: 35px;
+            width: 40px;
+            height: 40px;
             background: radial-gradient(circle, #ffff00, #ff8800, #ff4400, transparent);
             border-radius: 50%;
             opacity: 0;
             z-index: 50;
-            animation: flash 0.15s ease-out;
+            animation: flash 0.2s ease-out;
         }
-        
+
         @keyframes flash {
-            0% { opacity: 0; transform: scale(0); }
-            50% { opacity: 1; transform: scale(2); }
-            100% { opacity: 0; transform: scale(3); }
+            0% {
+                opacity: 0;
+                transform: scale(0);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(2.5);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(4);
+            }
         }
-        
+
         /* Bullet trail effect */
         .bullet-trail {
             position: absolute;
-            width: 5px;
-            height: 35px;
+            width: 6px;
+            height: 40px;
             background: linear-gradient(to top, #ffff00, #ff8800, transparent);
             border-radius: 50%;
             z-index: 40;
-            animation: bulletFly 0.3s linear;
-            box-shadow: 0 0 12px rgba(255, 255, 0, 0.7);
+            animation: bulletFly 0.4s linear;
+            box-shadow: 0 0 15px rgba(255, 255, 0, 0.8);
         }
-        
+
         @keyframes bulletFly {
-            0% { opacity: 1; transform: scale(1); }
-            100% { opacity: 0; transform: scale(0.3); }
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
         }
-        
+
         /* Hit marker - Enhanced */
         .hit-marker {
             position: absolute;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             pointer-events: none;
             z-index: 150;
-            animation: hitMarkerShow 0.5s ease-out;
+            animation: hitMarkerShow 0.6s ease-out;
         }
-        
+
         .hit-marker::before,
         .hit-marker::after {
             content: '';
             position: absolute;
             background: #00ff00;
-            box-shadow: 0 0 12px rgba(0, 255, 0, 0.8);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 1);
         }
-        
+
         .hit-marker::before {
-            width: 3px;
-            height: 40px;
+            width: 4px;
+            height: 50px;
             left: 50%;
             top: 0;
             transform: translateX(-50%);
         }
-        
+
         .hit-marker::after {
-            width: 40px;
-            height: 3px;
+            width: 50px;
+            height: 4px;
             top: 50%;
             left: 0;
             transform: translateY(-50%);
         }
-        
+
         @keyframes hitMarkerShow {
-            0% { opacity: 0; transform: scale(0.5); }
-            50% { opacity: 1; transform: scale(1.2); }
-            100% { opacity: 0; transform: scale(1); }
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.3);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(1);
+            }
         }
-        
+
         /* Points popup animation */
         .points-popup {
             position: absolute;
             font-weight: bold;
             font-size: 2rem;
             color: #00ff00;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
             pointer-events: none;
             z-index: 1000;
             animation: pointsFloat 2s ease-out forwards;
         }
-        
+
         @keyframes pointsFloat {
             0% {
                 opacity: 1;
                 transform: translateY(0px) scale(1);
             }
+
             100% {
                 opacity: 0;
                 transform: translateY(-80px) scale(1.5);
             }
         }
-        
+
         /* Balloon vanish animation */
         .balloon-vanish {
             animation: vanishAtTop 0.5s ease-out forwards;
         }
-        
+
         @keyframes vanishAtTop {
             0% {
                 opacity: 1;
                 transform: scale(1);
             }
+
             100% {
                 opacity: 0;
                 transform: scale(0.5);
             }
         }
-        
+
         /* NEW FEATURE: Power-up Effects */
         .power-up {
             position: absolute;
@@ -251,27 +378,34 @@
             cursor: pointer;
             box-shadow: 0 0 20px rgba(255, 255, 0, 0.8);
         }
-        
+
         @keyframes powerUpFloat {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-30px) rotate(180deg); }
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-30px) rotate(180deg);
+            }
         }
-        
+
         .power-up-multi {
             background: radial-gradient(circle, #ff6b35, #f7931e);
             border: 3px solid #fff;
         }
-        
+
         .power-up-rapid {
             background: radial-gradient(circle, #4ecdc4, #44a08d);
             border: 3px solid #fff;
         }
-        
+
         .power-up-big {
             background: radial-gradient(circle, #a8e6cf, #7fcdcd);
             border: 3px solid #fff;
         }
-        
+
         /* NEW FEATURE: Combo System */
         .combo-display {
             position: fixed;
@@ -281,58 +415,97 @@
             font-size: 3rem;
             font-weight: bold;
             color: #ff6b35;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
             z-index: 200;
             animation: comboShow 1.5s ease-out forwards;
             pointer-events: none;
         }
-        
+
         @keyframes comboShow {
-            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
-            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
-            100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+
+            50% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(1);
+            }
         }
-        
+
         /* NEW FEATURE: Moving Balloons */
         .balloon-zigzag {
             animation: zigzagMove 6s infinite linear;
         }
-        
+
         @keyframes zigzagMove {
-            0% { transform: translateX(0px); }
-            25% { transform: translateX(50px); }
-            50% { transform: translateX(0px); }
-            75% { transform: translateX(-50px); }
-            100% { transform: translateX(0px); }
+            0% {
+                transform: translateX(0px);
+            }
+
+            25% {
+                transform: translateX(50px);
+            }
+
+            50% {
+                transform: translateX(0px);
+            }
+
+            75% {
+                transform: translateX(-50px);
+            }
+
+            100% {
+                transform: translateX(0px);
+            }
         }
-        
+
         /* NEW FEATURE: Special Balloons */
         .balloon-golden {
             filter: hue-rotate(45deg) brightness(1.5) saturate(2);
             animation: goldenGlow 2s infinite ease-in-out;
         }
-        
+
         @keyframes goldenGlow {
-            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
-            50% { box-shadow: 0 0 40px rgba(255, 215, 0, 1); }
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(255, 215, 0, 1);
+            }
         }
-        
+
         .balloon-bomb {
             filter: hue-rotate(180deg) brightness(0.8);
             animation: bombPulse 1s infinite ease-in-out;
         }
-        
+
         @keyframes bombPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
         }
-        
+
         /* NEW FEATURE: Streak Display */
         .streak-display {
             position: fixed;
             top: 120px;
             right: 20px;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0, 0, 0, 0.8);
             color: #ff6b35;
             padding: 10px 15px;
             border-radius: 10px;
@@ -342,24 +515,63 @@
             border: 2px solid #ff6b35;
             animation: streakPulse 2s infinite ease-in-out;
         }
-        
+
         @keyframes streakPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
         }
-        
+
+        /* Difficulty Display */
+        .difficulty-display {
+            position: fixed;
+            top: 180px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #ffffff;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            z-index: 100;
+            border: 2px solid #ffffff;
+        }
+
+        .difficulty-easy-display {
+            border-color: #10b981;
+            color: #10b981;
+        }
+
+        .difficulty-medium-display {
+            border-color: #f59e0b;
+            color: #f59e0b;
+        }
+
+        .difficulty-hard-display {
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
         /* Balloon uniform size - larger for all devices */
         .balloon-uniform {
             width: 80px !important;
             height: 120px !important;
         }
-        
+
         /* Specific balloon sizes for b2, b3, b4 - larger */
-        .balloon-b2, .balloon-b3, .balloon-b4 {
+        .balloon-b2,
+        .balloon-b3,
+        .balloon-b4 {
             width: 90px !important;
             height: 135px !important;
         }
-        
+
         /* Mobile Responsive Styles */
         @media (max-width: 768px) {
             .score-container {
@@ -368,146 +580,226 @@
                 align-items: flex-start;
                 width: 100%;
             }
+
             .score-left {
                 text-align: left;
             }
+
             .score-right {
                 text-align: right;
             }
+
             .game-title {
                 font-size: 2rem;
             }
+
             .score-text {
                 font-size: 1.5rem;
             }
+
             .highest-score-text {
                 font-size: 1.5rem;
             }
+
             .game-area-mobile {
                 height: 70vh;
             }
-            .gun-mobile {
-                width: 18vw;
-                height: 18vw;
-                max-width: 80px;
-                max-height: 80px;
+
+            .original-gun {
+                width: 80px;
+                height: 60px;
             }
+
             .balloon-uniform {
                 width: 60px !important;
                 height: 90px !important;
             }
-            .balloon-b2, .balloon-b3, .balloon-b4 {
+
+            .balloon-b2,
+            .balloon-b3,
+            .balloon-b4 {
                 width: 70px !important;
                 height: 105px !important;
             }
+
             .heart-mobile {
                 width: 8vw;
                 height: 8vw;
                 max-width: 32px;
                 max-height: 32px;
             }
+
             .points-popup {
                 font-size: 1.5rem;
             }
+
             .play-again-btn {
                 font-size: 1.2rem;
                 padding: 12px 24px;
                 touch-action: manipulation;
                 -webkit-tap-highlight-color: transparent;
             }
-            .crosshair {
-                width: 25px;
-                height: 25px;
+
+            .target-pointer {
+                width: 45px;
+                height: 45px;
             }
-            .crosshair-center {
-                width: 10px;
-                height: 10px;
+
+            .target-center {
+                width: 18px;
+                height: 18px;
             }
-            .crosshair::before {
-                height: 25px;
+
+            .target-pointer::before {
+                height: 45px;
+                width: 3px;
             }
-            .crosshair::after {
-                width: 25px;
+
+            .target-pointer::after {
+                width: 45px;
+                height: 3px;
             }
+
             .streak-display {
                 top: 80px;
                 right: 10px;
                 font-size: 1rem;
                 padding: 8px 12px;
             }
-                        .combo-display {
+
+            .difficulty-display {
+                top: 130px;
+                right: 10px;
+                font-size: 0.9rem;
+                padding: 6px 10px;
+            }
+
+            .combo-display {
                 font-size: 2rem;
             }
+
             .power-up {
                 width: 35px;
                 height: 35px;
             }
+
+            .difficulty-card {
+                padding: 1.5rem;
+            }
+
+            .difficulty-card h3 {
+                font-size: 1.5rem;
+            }
+
+            .difficulty-card p {
+                font-size: 0.9rem;
+            }
         }
-        
+
         @media (max-width: 480px) {
             .game-title {
                 font-size: 1.75rem;
             }
+
             .score-text {
                 font-size: 1.25rem;
             }
+
             .highest-score-text {
                 font-size: 1.25rem;
             }
+
             .loading-balloon-mobile {
                 width: 32vw;
                 height: 32vw;
                 max-width: 150px;
                 max-height: 150px;
             }
+
             .points-popup {
                 font-size: 1.2rem;
             }
+
             .balloon-uniform {
                 width: 50px !important;
                 height: 75px !important;
             }
-            .balloon-b2, .balloon-b3, .balloon-b4 {
+
+            .balloon-b2,
+            .balloon-b3,
+            .balloon-b4 {
                 width: 60px !important;
                 height: 90px !important;
             }
+
             .play-again-btn {
                 font-size: 1.1rem;
                 padding: 10px 20px;
             }
-            .crosshair {
-                width: 22px;
-                height: 22px;
+
+            .target-pointer {
+                width: 35px;
+                height: 35px;
             }
-            .crosshair-center {
-                width: 8px;
-                height: 8px;
+
+            .target-center {
+                width: 14px;
+                height: 14px;
             }
-            .crosshair::before {
-                height: 22px;
+
+            .target-pointer::before {
+                height: 35px;
+                width: 2px;
             }
-            .crosshair::after {
-                width: 22px;
+
+            .target-pointer::after {
+                width: 35px;
+                height: 2px;
             }
+
             .streak-display {
                 font-size: 0.9rem;
                 padding: 6px 10px;
             }
+
+            .difficulty-display {
+                font-size: 0.8rem;
+                padding: 5px 8px;
+            }
+
             .combo-display {
                 font-size: 1.5rem;
             }
+
             .power-up {
                 width: 30px;
                 height: 30px;
             }
+
+            .original-gun {
+                width: 70px;
+                height: 50px;
+            }
+
+            .difficulty-card {
+                padding: 1rem;
+            }
+
+            .difficulty-card h3 {
+                font-size: 1.25rem;
+            }
+
+            .difficulty-card p {
+                font-size: 0.8rem;
+            }
         }
-        
+
         /* Instructions panel */
         .instructions {
             position: fixed;
             top: 20px;
             left: 20px;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0, 0, 0, 0.9);
             color: white;
             padding: 15px;
             border-radius: 10px;
@@ -516,7 +808,7 @@
             max-width: 280px;
             border: 2px solid #00ff00;
         }
-        
+
         @media (max-width: 768px) {
             .instructions {
                 top: 10px;
@@ -528,23 +820,29 @@
         }
     </style>
 </head>
+
 <body class="min-h-screen">
     <!-- Loading Screen -->
-    <div id="loadingScreen" class="fixed inset-0 bg-gradient-to-b from-blue-400 to-blue-600 z-50 flex flex-col items-center justify-center px-4">
+    <div id="loadingScreen"
+        class="fixed inset-0 bg-gradient-to-b from-blue-400 to-blue-600 z-50 flex flex-col items-center justify-center px-4">
         <!-- Balloon Image -->
-        <img src="ballon.jpeg" class="w-48 h-48 md:w-48 md:h-48 loading-balloon-mobile loading-balloon mb-8 rounded-full shadow-2xl" alt="Balloon">
-        
+        <img src="ballon.jpeg"
+            class="w-48 h-48 md:w-48 md:h-48 loading-balloon-mobile loading-balloon mb-8 rounded-full shadow-2xl"
+            alt="Balloon">
+
         <!-- Game Title -->
         <h1 class="text-4xl md:text-4xl game-title font-bold text-white mb-8 text-center">Balloon Shooter</h1>
-        
+
         <!-- Progress Bar Container -->
         <div class="w-80 max-w-sm h-6 bg-white/30 rounded-full mt-4 backdrop-blur-sm border-2 border-white/50">
-            <div id="progressBar" class="h-full bg-gradient-to-r from-amber-400 to-rose-600 rounded-full transition-all duration-300 shadow-lg" style="width: 0%"></div>
+            <div id="progressBar"
+                class="h-full bg-gradient-to-r from-amber-400 to-rose-600 rounded-full transition-all duration-300 shadow-lg"
+                style="width: 0%"></div>
         </div>
-        
+
         <!-- Progress Text -->
         <p id="progressText" class="text-white mt-6 text-xl font-semibold">Loading... 0%</p>
-        
+
         <!-- Loading Dots Animation -->
         <div class="flex space-x-2 mt-4">
             <div class="w-3 h-3 bg-white rounded-full animate-bounce"></div>
@@ -553,15 +851,77 @@
         </div>
     </div>
 
+    <!-- Difficulty Selection Screen -->
+    <div id="difficultyScreen"
+        class="hidden fixed inset-0 difficulty-screen z-50 flex flex-col items-center justify-center px-4">
+        <h1 class="text-5xl md:text-6xl font-bold text-white mb-4 text-center">Balloon Shooter</h1>
+        <p class="text-xl md:text-2xl text-white/80 mb-12 text-center">Choose Your Difficulty</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl w-full">
+            <!-- Easy Mode -->
+            <div class="difficulty-card difficulty-easy rounded-2xl p-6 md:p-8 text-center cursor-pointer"
+                onclick="selectDifficulty('easy')">
+                <div class="text-6xl mb-4">🎈</div>
+                <h3 class="text-2xl md:text-3xl font-bold text-white mb-4">Easy</h3>
+                <p class="text-white/80 mb-6 text-sm md:text-base">Perfect for beginners<br>1.5x balloon
+                    speed<br>Relaxed gameplay</p>
+                <button
+                    class="difficulty-btn bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full transition-all">
+                    Start Easy
+                </button>
+            </div>
+
+            <!-- Medium Mode -->
+            <div class="difficulty-card difficulty-medium rounded-2xl p-6 md:p-8 text-center cursor-pointer"
+                onclick="selectDifficulty('medium')">
+                <div class="text-6xl mb-4">🎯</div>
+                <h3 class="text-2xl md:text-3xl font-bold text-white mb-4">Medium</h3>
+                <p class="text-white/80 mb-6 text-sm md:text-base">Balanced challenge<br>2x balloon speed<br>Standard
+                    gameplay</p>
+                <button
+                    class="difficulty-btn bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-8 rounded-full transition-all">
+                    Start Medium
+                </button>
+            </div>
+
+            <!-- Hard Mode -->
+            <div class="difficulty-card difficulty-hard rounded-2xl p-6 md:p-8 text-center cursor-pointer"
+                onclick="selectDifficulty('hard')">
+                <div class="text-6xl mb-4">🔥</div>
+                <h3 class="text-2xl md:text-3xl font-bold text-white mb-4">Hard</h3>
+                <p class="text-white/80 mb-6 text-sm md:text-base">For experts only<br>2.5x balloon speed<br>Maximum
+                    challenge</p>
+                <button
+                    class="difficulty-btn bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-8 rounded-full transition-all">
+                    Start Hard
+                </button>
+            </div>
+        </div>
+
+        <p class="text-white/60 mt-8 text-center text-sm">You can change difficulty anytime by pressing 1, 2, or 3
+        </p>
+    </div>
+
     <!-- Game Over Screen -->
-    <div id="gameOverScreen" class="hidden fixed inset-0 bg-black/80 z-50 flex flex-col items-center justify-center px-4">
+    <div id="gameOverScreen"
+        class="hidden fixed inset-0 bg-black/80 z-50 flex flex-col items-center justify-center px-4">
         <h2 class="text-4xl md:text-6xl font-bold text-red-500 mb-8 text-center">Game Over</h2>
-        <p class="text-2xl md:text-3xl text-white mb-4 text-center">Final Score: <span id="finalScore" class="text-blue-400 font-bold">0</span></p>
-        <p class="text-xl md:text-2xl text-white mb-4 text-center">Highest Score: <span id="gameOverHighestScore" class="text-yellow-400 font-bold">0</span></p>
-        <p class="text-lg md:text-xl text-white mb-8 text-center">Best Streak: <span id="gameOverBestStreak" class="text-green-400 font-bold">0</span></p>
-        <button id="playAgainBtn" class="bg-green-500 hover:bg-green-600 active:bg-green-700 text-white font-bold py-3 px-6 rounded-lg text-xl transition-colors play-again-btn">
-            Play Again
-        </button>
+        <p class="text-2xl md:text-3xl text-white mb-4 text-center">Final Score: <span id="finalScore"
+                class="text-blue-400 font-bold">0</span></p>
+        <p class="text-xl md:text-2xl text-white mb-4 text-center">Highest Score: <span id="gameOverHighestScore"
+                class="text-yellow-400 font-bold">0</span></p>
+        <p class="text-lg md:text-xl text-white mb-8 text-center">Best Streak: <span id="gameOverBestStreak"
+                class="text-green-400 font-bold">0</span></p>
+        <div class="flex flex-col sm:flex-row gap-4">
+            <button id="playAgainBtn"
+                class="bg-green-500 hover:bg-green-600 active:bg-green-700 text-white font-bold py-3 px-6 rounded-lg text-xl transition-colors play-again-btn">
+                Play Again
+            </button>
+            <button id="changeDifficultyBtn"
+                class="bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-xl transition-colors">
+                Change Difficulty
+            </button>
+        </div>
     </div>
 
     <!-- Game Screen -->
@@ -571,51 +931,62 @@
             <div class="instructions">
                 <div class="font-bold mb-2">🎯 How to Play:</div>
                 <div>• Move mouse/finger to aim</div>
-                <div>• Click GUN to shoot</div>
+                <div>• Click anywhere to shoot</div>
                 <div>• Hit balloons to score points</div>
                 <div>• 🟡 Golden balloons = 20 points</div>
                 <div>• 💣 Bomb balloons = -10 points</div>
                 <div>• Collect power-ups for bonuses!</div>
                 <div>• Build streaks for multipliers!</div>
             </div>
-            
+
             <!-- Streak Display -->
             <div id="streakDisplay" class="streak-display hidden">
                 Streak: <span id="streakCount">0</span>x
             </div>
-            
+
+            <!-- Difficulty Display -->
+            <div id="difficultyDisplay" class="difficulty-display">
+                <span id="difficultyText">Medium</span>
+            </div>
+
             <!-- Game Container -->
             <div class="container mx-auto px-2 md:px-4 py-4 md:py-8 relative">
                 <!-- Score and Lives -->
                 <div class="flex justify-between items-start mb-4 md:mb-8 score-container w-full">
                     <div class="score-left">
-                        <div class="text-2xl md:text-3xl font-bold score-text">Score: <span id="score">0</span></div>
-                        <div class="text-lg md:text-xl font-bold text-purple-600">Multiplier: <span id="multiplier">1</span>x</div>
+                        <div class="text-2xl md:text-3xl font-bold score-text">Score: <span id="score">0</span>
+                        </div>
+                        <div class="text-lg md:text-xl font-bold text-purple-600">Multiplier: <span
+                                id="multiplier">1</span>x</div>
                     </div>
                     <div class="score-right flex flex-col items-end">
-                        <div class="text-2xl md:text-3xl font-bold highest-score-text mb-2">Highest: <span id="highestScore">0</span></div>
+                        <div class="text-2xl md:text-3xl font-bold highest-score-text mb-2">Highest: <span
+                                id="highestScore">0</span></div>
                         <div id="lives" class="heart-container flex gap-1 md:gap-2">
-                            <img src="https://www.freeiconspng.com/uploads/heart-icon-14.png" class="w-8 h-8 md:w-10 md:h-10 heart-mobile">
-                            <img src="https://www.freeiconspng.com/uploads/heart-icon-14.png" class="w-8 h-8 md:w-10 md:h-10 heart-mobile">
-                            <img src="https://www.freeiconspng.com/uploads/heart-icon-14.png" class="w-8 h-8 md:w-10 md:h-10 heart-mobile">
+                            <img src="https://www.freeiconspng.com/uploads/heart-icon-14.png"
+                                class="w-8 h-8 md:w-10 md:h-10 heart-mobile">
+                            <img src="https://www.freeiconspng.com/uploads/heart-icon-14.png"
+                                class="w-8 h-8 md:w-10 md:h-10 heart-mobile">
+                            <img src="https://www.freeiconspng.com/uploads/heart-icon-14.png"
+                                class="w-8 h-8 md:w-10 md:h-10 heart-mobile">
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Game Area -->
-                <div id="gameArea" class="relative h-[70vh] md:h-[80vh] game-area-mobile overflow-hidden rounded-3xl">
-                    <!-- Enhanced Crosshair -->
-                    <div id="crosshair" class="crosshair">
-                        <div class="crosshair-center"></div>
+                <div id="gameArea"
+                    class="relative h-[70vh] md:h-[80vh] game-area-mobile overflow-hidden rounded-3xl">
+                    <!-- Enhanced Target Pointer -->
+                    <div id="targetPointer" class="target-pointer">
+                        <div class="target-center"></div>
                     </div>
-                    
-                    <!-- Light Laser Sight -->
-                    <div id="laserSight" class="laser-sight"></div>
-                    
-                    <!-- Gun Container - Rotatable -->
-                    <div id="gunContainer" class="absolute bottom-2 md:bottom-4 left-1/2 transform -translate-x-1/2 z-10 gun-container">
-                        <img id="gun" src="gun.png" 
-                             class="w-20 h-20 md:w-28 md:h-28 gun-mobile gun" alt="Gun" title="Click to Shoot!">
+
+                    <!-- Laser Line from Gun to Target -->
+                    <div id="laserLine" class="laser-line"></div>
+
+                    <!-- Gun Container - Fixed position -->
+                    <div id="gunContainer" class="absolute bottom-2 md:bottom-4 left-1/2 gun-container">
+                        <img id="gun" src="gun.png" class="original-gun" alt="Gun" title="Click anywhere to Shoot!">
                     </div>
                 </div>
             </div>
@@ -628,9 +999,13 @@
         let missedBalloons = 0;
         let highestScore = 0;
         let balloonIntervals = [];
-        let gunAngle = 90;
-        let targetAngle = 90;
-        
+        let targetX = 50; // Target position X (percentage)
+        let targetY = 40; // Target position Y (percentage)
+
+        // Difficulty system variables - UPDATED SPEEDS
+        let currentDifficulty = 'medium';
+        let difficultyMultiplier = 2.0; // Default medium
+
         // NEW FEATURES: Game state variables
         let streak = 0;
         let bestStreak = 0;
@@ -641,27 +1016,36 @@
         let rapidFireMode = false;
         let multiShotMode = false;
         let bigBulletsMode = false;
-        
-        // All preset angles
-        const presetAngles = [30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180];
-        
-        // Enhanced balloon configuration with special types
+
+        // Enhanced balloon configuration with 18 different types
         const balloonTypes = [
             { image: 'b1.png', points: 2, class: 'balloon-uniform', type: 'normal' },
             { image: 'b2.png', points: 3, class: 'balloon-b2', type: 'normal' },
             { image: 'b3.png', points: 5, class: 'balloon-b3', type: 'normal' },
             { image: 'b4.png', points: 5, class: 'balloon-b4', type: 'normal' },
             { image: 'b5.png', points: 10, class: 'balloon-uniform', type: 'normal' },
-            { image: 'b6.png', points: 7, class: 'balloon-uniform', type: 'normal' }
+            { image: 'b6.png', points: 7, class: 'balloon-uniform', type: 'normal' },
+            { image: 'b7.png', points: 4, class: 'balloon-uniform', type: 'normal' },
+            { image: 'b8.png', points: 6, class: 'balloon-uniform', type: 'normal' },
+            { image: 'b9.png', points: 8, class: 'balloon-uniform', type: 'normal' },
+            { image: 'b10.png', points: 9, class: 'balloon-uniform', type: 'normal' },
+            { image: 'b11.png', points: 11, class: 'balloon-uniform', type: 'normal' },
+            { image: 'b12.png', points: 12, class: 'balloon-uniform', type: 'normal' },
+            { image: 'b13.png', points: 13, class: 'balloon-uniform', type: 'normal' },
+            { image: 'b14.png', points: 14, class: 'balloon-uniform', type: 'normal' },
+            { image: 'b15.png', points: 15, class: 'balloon-uniform', type: 'normal' },
+            { image: 'b16.png', points: 3, class: 'balloon-uniform', type: 'normal' },
+            { image: 'b17.png', points: 4, class: 'balloon-uniform', type: 'normal' },
+            { image: 'b18.png', points: 6, class: 'balloon-uniform', type: 'normal' }
         ];
-        
+
         // Power-up types
         const powerUpTypes = [
             { type: 'multi', class: 'power-up-multi', duration: 10000, name: 'Multi Shot' },
             { type: 'rapid', class: 'power-up-rapid', duration: 8000, name: 'Rapid Fire' },
             { type: 'big', class: 'power-up-big', duration: 12000, name: 'Big Bullets' }
         ];
-        
+
         const shootSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2771/2771-preview.mp3');
         const popSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2870/2870-preview.mp3');
         const gameOverSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2658/2658-preview.mp3');
@@ -676,22 +1060,82 @@
             loadGame();
             preloadSounds();
             setupPlayAgainButton();
+            setupChangeDifficultyButton();
         };
 
         function setupPlayAgainButton() {
             const playAgainBtn = document.getElementById('playAgainBtn');
-            
+
             playAgainBtn.removeEventListener('click', restartGame);
             playAgainBtn.removeEventListener('touchend', handlePlayAgainTouch);
-            
+
             playAgainBtn.addEventListener('click', restartGame);
             playAgainBtn.addEventListener('touchend', handlePlayAgainTouch);
+        }
+
+        function setupChangeDifficultyButton() {
+            const changeDifficultyBtn = document.getElementById('changeDifficultyBtn');
+
+            changeDifficultyBtn.removeEventListener('click', showDifficultyScreen);
+            changeDifficultyBtn.removeEventListener('touchend', handleChangeDifficultyTouch);
+
+            changeDifficultyBtn.addEventListener('click', showDifficultyScreen);
+            changeDifficultyBtn.addEventListener('touchend', handleChangeDifficultyTouch);
         }
 
         function handlePlayAgainTouch(e) {
             e.preventDefault();
             e.stopPropagation();
             restartGame();
+        }
+
+        function handleChangeDifficultyTouch(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            showDifficultyScreen();
+        }
+
+        function showDifficultyScreen() {
+            document.getElementById('gameOverScreen').classList.add('hidden');
+            document.getElementById('gameScreen').classList.add('hidden');
+            document.getElementById('difficultyScreen').classList.remove('hidden');
+        }
+
+        // UPDATED: Difficulty selection with correct speed multipliers
+        function selectDifficulty(difficulty) {
+            currentDifficulty = difficulty;
+
+            // Set correct speed multipliers as requested
+            switch (difficulty) {
+                case 'easy':
+                    difficultyMultiplier = 1.5; // 1.5x speed
+                    break;
+                case 'medium':
+                    difficultyMultiplier = 2.0; // 2x speed
+                    break;
+                case 'hard':
+                    difficultyMultiplier = 2.5; // 2.5x speed
+                    break;
+            }
+
+            updateDifficultyDisplay();
+
+            document.getElementById('difficultyScreen').classList.add('hidden');
+            document.getElementById('gameScreen').classList.remove('hidden');
+            startGame();
+        }
+
+        function updateDifficultyDisplay() {
+            const difficultyDisplay = document.getElementById('difficultyDisplay');
+            const difficultyText = document.getElementById('difficultyText');
+
+            difficultyText.textContent = currentDifficulty.charAt(0).toUpperCase() + currentDifficulty.slice(1);
+
+            // Remove all difficulty classes
+            difficultyDisplay.classList.remove('difficulty-easy-display', 'difficulty-medium-display', 'difficulty-hard-display');
+
+            // Add appropriate class
+            difficultyDisplay.classList.add(`difficulty-${currentDifficulty}-display`);
         }
 
         function loadHighestScore() {
@@ -742,13 +1186,12 @@
                 progress += 2;
                 document.getElementById('progressBar').style.width = `${progress}%`;
                 document.getElementById('progressText').textContent = `Loading... ${progress}%`;
-                
+
                 if (progress >= 100) {
                     clearInterval(interval);
                     setTimeout(() => {
                         document.getElementById('loadingScreen').classList.add('hidden');
-                        document.getElementById('gameScreen').classList.remove('hidden');
-                        startGame();
+                        document.getElementById('difficultyScreen').classList.remove('hidden');
                     }, 500);
                 }
             }, 50);
@@ -760,48 +1203,49 @@
             lives = 3;
             missedBalloons = 0;
             streak = 0;
-                       multiplier = 1;
+            multiplier = 1;
             powerUpActive = false;
             powerUpType = '';
             powerUpDuration = 0;
             rapidFireMode = false;
             multiShotMode = false;
             bigBulletsMode = false;
-            gunAngle = 90;
-            targetAngle = 90;
-            
+            targetX = 50;
+            targetY = 40;
+
             // Clear intervals and balloons
             balloonIntervals.forEach(interval => clearInterval(interval));
             balloonIntervals = [];
-            
+
             const existingBalloons = document.querySelectorAll('.balloon');
             existingBalloons.forEach(balloon => balloon.remove());
-            
+
             const existingPowerUps = document.querySelectorAll('.power-up');
             existingPowerUps.forEach(powerUp => powerUp.remove());
-            
+
             updateScore();
             updateLives();
             updateHighestScore();
             updateBestStreak();
             updateStreak();
             updateMultiplier();
+            updateDifficultyDisplay();
             setupControls();
-            updateGunRotation();
+            updateTargetPosition();
             createBalloons();
             createPowerUps();
         }
 
         function createBalloons() {
             const settings = getOptimalSettings();
-            
+
             const interval = setInterval(() => {
                 const currentBalloons = document.querySelectorAll('.balloon').length;
                 if (currentBalloons < settings.maxBalloons && Math.random() < 0.7) {
                     createBalloon();
                 }
             }, settings.balloonInterval);
-            
+
             balloonIntervals.push(interval);
         }
 
@@ -812,19 +1256,19 @@
                     createPowerUp();
                 }
             }, 15000); // Power-up every 15 seconds
-            
+
             balloonIntervals.push(interval);
         }
 
         function createBalloon() {
             const settings = getOptimalSettings();
             let balloonType = balloonTypes[Math.floor(Math.random() * balloonTypes.length)];
-            
+
             // 10% chance for special balloons
             const specialChance = Math.random();
             let isSpecial = false;
             let specialType = 'normal';
-            
+
             if (specialChance < 0.05) { // 5% golden balloon
                 specialType = 'golden';
                 balloonType = { ...balloonType, points: 20, type: 'golden' };
@@ -834,53 +1278,54 @@
                 balloonType = { ...balloonType, points: -10, type: 'bomb' };
                 isSpecial = true;
             }
-            
+
             const balloon = document.createElement('img');
             balloon.src = balloonType.image;
             balloon.className = `balloon absolute ${balloonType.class}`;
             balloon.style.left = `${Math.random() * 70 + 10}%`;
             balloon.style.bottom = '-150px';
             balloon.style.zIndex = '20';
-            
+
             balloon.dataset.points = balloonType.points;
             balloon.dataset.type = balloonType.type;
-            
+
             // Add special balloon effects
+            
             if (specialType === 'golden') {
                 balloon.classList.add('balloon-golden');
             } else if (specialType === 'bomb') {
                 balloon.classList.add('balloon-bomb');
             }
-            
-            // 30% chance for moving balloons
-            if (Math.random() < 0.3) {
+
+            // 40% chance for moving balloons
+            if (Math.random() < 0.4) {
                 balloon.classList.add('balloon-zigzag');
             }
-            
-            balloon.onerror = function() {
-                this.style.backgroundColor = isSpecial ? 
+
+            balloon.onerror = function () {
+                this.style.backgroundColor = isSpecial ?
                     (specialType === 'golden' ? '#ffd700' : '#ff4444') : '#ff6b6b';
                 this.style.borderRadius = '50% 50% 50% 50% / 60% 60% 40% 40%';
                 this.style.border = '2px solid #ff5252';
                 this.style.width = '60px';
                 this.style.height = '90px';
             };
-            
+
             document.getElementById('gameArea').appendChild(balloon);
-            
+
             const animation = balloon.animate([
-                { 
-                    bottom: '-150px', 
+                {
+                    bottom: '-150px',
                     opacity: 1,
                     transform: 'translateY(0px) rotate(0deg)'
                 },
-                { 
-                    bottom: '50%', 
+                {
+                    bottom: '50%',
                     opacity: 1,
                     transform: 'translateY(-10px) rotate(5deg)'
                 },
-                { 
-                    bottom: 'calc(100% + 50px)', 
+                {
+                    bottom: 'calc(100% + 50px)',
                     opacity: 0.8,
                     transform: 'translateY(-20px) rotate(-5deg)'
                 }
@@ -894,10 +1339,10 @@
                 if (balloon.parentNode) {
                     const balloonRect = balloon.getBoundingClientRect();
                     const gameAreaRect = document.getElementById('gameArea').getBoundingClientRect();
-                    
+
                     if (balloonRect.bottom <= gameAreaRect.top) {
                         balloon.classList.add('balloon-vanish');
-                        
+
                         setTimeout(() => {
                             if (balloon.parentNode) {
                                 balloon.remove();
@@ -912,14 +1357,14 @@
                                 }
                             }
                         }, 500);
-                        
+
                         cancelAnimationFrame(animationFrame);
                     } else {
                         animationFrame = requestAnimationFrame(checkBalloonPosition);
                     }
                 }
             };
-            
+
             animationFrame = requestAnimationFrame(checkBalloonPosition);
 
             animation.onfinish = () => {
@@ -941,7 +1386,7 @@
 
         function createPowerUp() {
             const powerUpType = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)];
-            
+
             const powerUp = document.createElement('div');
             powerUp.className = `power-up ${powerUpType.class}`;
             powerUp.style.left = `${Math.random() * 80 + 10}%`;
@@ -949,7 +1394,7 @@
             powerUp.dataset.type = powerUpType.type;
             powerUp.dataset.duration = powerUpType.duration;
             powerUp.dataset.name = powerUpType.name;
-            
+
             // Add power-up icon
             const icon = document.createElement('div');
             icon.style.cssText = `
@@ -962,8 +1407,8 @@
                 color: white;
                 text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
             `;
-            
-            switch(powerUpType.type) {
+
+            switch (powerUpType.type) {
                 case 'multi':
                     icon.textContent = '3x';
                     break;
@@ -974,18 +1419,18 @@
                     icon.textContent = '💥';
                     break;
             }
-            
+
             powerUp.appendChild(icon);
-            
+
             // Add click handler
             powerUp.addEventListener('click', () => collectPowerUp(powerUp));
             powerUp.addEventListener('touchend', (e) => {
                 e.preventDefault();
                 collectPowerUp(powerUp);
             });
-            
+
             document.getElementById('gameArea').appendChild(powerUp);
-            
+
             // Animate power-up movement
             const animation = powerUp.animate([
                 { bottom: '-50px', opacity: 1 },
@@ -1006,24 +1451,24 @@
             const type = powerUp.dataset.type;
             const duration = parseInt(powerUp.dataset.duration);
             const name = powerUp.dataset.name;
-            
+
             // Play power-up sound
             powerUpSound.currentTime = 0;
-            powerUpSound.play().catch(() => {});
-            
+            powerUpSound.play().catch(() => { });
+
             // Activate power-up
             activatePowerUp(type, duration, name);
-            
+
             // Remove power-up with effect
             powerUp.style.transform = 'scale(2)';
             powerUp.style.opacity = '0';
-            
+
             setTimeout(() => {
                 if (powerUp.parentNode) {
                     powerUp.remove();
                 }
             }, 300);
-            
+
             // Show power-up notification
             showPowerUpNotification(name, duration);
         }
@@ -1032,8 +1477,8 @@
             powerUpActive = true;
             powerUpType = type;
             powerUpDuration = duration;
-            
-            switch(type) {
+
+            switch (type) {
                 case 'multi':
                     multiShotMode = true;
                     break;
@@ -1044,7 +1489,7 @@
                     bigBulletsMode = true;
                     break;
             }
-            
+
             // Set timeout to deactivate power-up
             setTimeout(() => {
                 deactivatePowerUp();
@@ -1065,9 +1510,9 @@
             notification.className = 'combo-display';
             notification.textContent = `${name} Activated!`;
             notification.style.color = '#4ecdc4';
-            
+
             document.body.appendChild(notification);
-            
+
             setTimeout(() => {
                 if (notification.parentNode) {
                     notification.remove();
@@ -1080,27 +1525,15 @@
             document.removeEventListener('mousemove', handleMouseMove);
             document.removeEventListener('touchmove', handleTouchMove);
             document.removeEventListener('keydown', handleKeyDown);
-            
-            // Add event listeners for gun rotation
+            document.removeEventListener('click', handleClick);
+            document.removeEventListener('touchend', handleTouchEnd);
+
+            // Add event listeners for target movement
             document.addEventListener('mousemove', handleMouseMove);
             document.addEventListener('touchmove', handleTouchMove);
             document.addEventListener('keydown', handleKeyDown);
-
-            // Gun click/touch to shoot
-            const gunContainer = document.getElementById('gunContainer');
-            const gun = document.getElementById('gun');
-            
-            // Remove existing listeners
-            gunContainer.removeEventListener('click', shoot);
-            gunContainer.removeEventListener('touchend', handleGunTouch);
-            gun.removeEventListener('click', shoot);
-            gun.removeEventListener('touchend', handleGunTouch);
-            
-            // Add shoot listeners to both gun container and gun image
-            gunContainer.addEventListener('click', shoot);
-            gunContainer.addEventListener('touchend', handleGunTouch);
-            gun.addEventListener('click', shoot);
-            gun.addEventListener('touchend', handleGunTouch);
+            document.addEventListener('click', handleClick);
+            document.addEventListener('touchend', handleTouchEnd);
         }
 
         function handleKeyDown(e) {
@@ -1108,50 +1541,43 @@
                 e.preventDefault();
                 shoot();
             }
-            // Arrow keys to cycle through preset angles
+
+            // Arrow keys to move target
             if (e.key === 'ArrowLeft') {
-                const currentIndex = presetAngles.indexOf(targetAngle);
-                const nextIndex = Math.min(currentIndex + 1, presetAngles.length - 1);
-                targetAngle = presetAngles[nextIndex];
-                snapToAngle();
+                targetX = Math.max(5, targetX - 5);
+                updateTargetPosition();
             }
             if (e.key === 'ArrowRight') {
-                const currentIndex = presetAngles.indexOf(targetAngle);
-                const nextIndex = Math.max(currentIndex - 1, 0);
-                targetAngle = presetAngles[nextIndex];
-                snapToAngle();
+                targetX = Math.min(95, targetX + 5);
+                updateTargetPosition();
+            }
+            if (e.key === 'ArrowUp') {
+                targetY = Math.max(5, targetY - 5);
+                updateTargetPosition();
+            }
+            if (e.key === 'ArrowDown') {
+                targetY = Math.min(85, targetY + 5);
+                updateTargetPosition();
             }
         }
 
         function handleMouseMove(e) {
             const gameArea = document.getElementById('gameArea');
             const rect = gameArea.getBoundingClientRect();
-            
-            // Calculate mouse position relative to gun position
-            const gunX = rect.left + rect.width / 2;
-            const gunY = rect.bottom - 50;
-            
-            const mouseX = e.clientX;
-            const mouseY = e.clientY;
-            
-            // Calculate angle from gun to mouse
-            const deltaX = mouseX - gunX;
-            const deltaY = gunY - mouseY;
-            
-            let angle = Math.atan2(deltaX, deltaY) * (180 / Math.PI);
-            let gunAngleCalculated = 90 - angle;
-            
-            if (gunAngleCalculated < 0) gunAngleCalculated += 360;
-            if (gunAngleCalculated > 360) gunAngleCalculated -= 360;
-            
-            if (gunAngleCalculated > 180) {
-                gunAngleCalculated = 360 - gunAngleCalculated;
-            }
-            
-            gunAngleCalculated = Math.max(30, Math.min(180, gunAngleCalculated));
-            
-            targetAngle = findClosestAngle(gunAngleCalculated);
-            snapToAngle();
+
+            // Calculate mouse position relative to game area
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+
+            // Convert to percentage
+            targetX = (mouseX / rect.width) * 100;
+            targetY = (mouseY / rect.height) * 100;
+
+            // Clamp values
+            targetX = Math.max(5, Math.min(95, targetX));
+            targetY = Math.max(5, Math.min(85, targetY));
+
+            updateTargetPosition();
         }
 
         function handleTouchMove(e) {
@@ -1159,132 +1585,125 @@
             const gameArea = document.getElementById('gameArea');
             const rect = gameArea.getBoundingClientRect();
             const touch = e.touches[0];
-            
-            const gunX = rect.left + rect.width / 2;
-            const gunY = rect.bottom - 50;
-            
-            const touchX = touch.clientX;
-            const touchY = touch.clientY;
-            
-            const deltaX = touchX - gunX;
-            const deltaY = gunY - touchY;
-            
-            let angle = Math.atan2(deltaX, deltaY) * (180 / Math.PI);
-            let gunAngleCalculated = 90 - angle;
-            
-            if (gunAngleCalculated < 0) gunAngleCalculated += 360;
-            if (gunAngleCalculated > 360) gunAngleCalculated -= 360;
-            
-            if (gunAngleCalculated > 180) {
-                gunAngleCalculated = 360 - gunAngleCalculated;
-            }
-            
-            gunAngleCalculated = Math.max(30, Math.min(180, gunAngleCalculated));
-            
-            targetAngle = findClosestAngle(gunAngleCalculated);
-            snapToAngle();
+
+            // Calculate touch position relative to game area
+            const touchX = touch.clientX - rect.left;
+            const touchY = touch.clientY - rect.top;
+
+            // Convert to percentage
+            targetX = (touchX / rect.width) * 100;
+            targetY = (touchY / rect.height) * 100;
+
+            // Clamp values
+            targetX = Math.max(5, Math.min(95, targetX));
+            targetY = Math.max(5, Math.min(85, targetY));
+
+            updateTargetPosition();
         }
 
-        function handleGunTouch(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            shoot();
-        }
-
-        function findClosestAngle(inputAngle) {
-                       inputAngle = Math.max(30, Math.min(180, inputAngle));
-            
-            let closestAngle = presetAngles[0];
-            let minDifference = Math.abs(inputAngle - presetAngles[0]);
-            
-            for (let i = 1; i < presetAngles.length; i++) {
-                const difference = Math.abs(inputAngle - presetAngles[i]);
-                if (difference < minDifference) {
-                    minDifference = difference;
-                    closestAngle = presetAngles[i];
-                }
-            }
-            
-            return closestAngle;
-        }
-
-        function snapToAngle() {
-            gunAngle = targetAngle;
-            updateGunRotation();
-        }
-
-        function updateGunRotation() {
-            const gunContainer = document.getElementById('gunContainer');
-            const crosshair = document.getElementById('crosshair');
-            const laserSight = document.getElementById('laserSight');
-            
-            const rotationAngle = gunAngle - 90;
-            
-            gunContainer.style.transform = `translateX(-50%) rotate(${rotationAngle}deg)`;
-            
-            if (gunAngle === 30 || gunAngle === 180) {
-                crosshair.style.opacity = '0';
-                laserSight.style.opacity = '0';
-            } else {
-                crosshair.style.opacity = '1';
-                laserSight.style.opacity = '0.4';
-                
-                const gameArea = document.getElementById('gameArea');
-                const gunX = 50;
-                const gunY = 95;
-                
-                const angleRad = (gunAngle - 90) * (Math.PI / 180);
-                const aimDistance = 35;
-                const aimX = gunX + (Math.sin(angleRad) * aimDistance);
-                const aimY = gunY - (Math.cos(angleRad) * aimDistance);
-                
-                const clampedAimX = Math.max(8, Math.min(92, aimX));
-                const clampedAimY = Math.max(8, Math.min(92, aimY));
-                
-                crosshair.style.left = `${clampedAimX}%`;
-                crosshair.style.top = `${clampedAimY}%`;
-                crosshair.style.transform = 'translate(-50%, -50%)';
-                
-                updateLaserSight();
-            }
-        }
-
-        function updateLaserSight() {
-            const laserSight = document.getElementById('laserSight');
+        function handleClick(e) {
             const gameArea = document.getElementById('gameArea');
             const rect = gameArea.getBoundingClientRect();
-            
-            const gunX = rect.width * 0.5;
-            const gunY = rect.height * 0.95;
-            
-            const angleRad = (gunAngle - 90) * (Math.PI / 180);
-            const barrelLength = 35;
-            
-            const barrelX = gunX + Math.sin(angleRad) * barrelLength;
-            const barrelY = gunY - Math.cos(angleRad) * barrelLength;
-            
-            const laserLength = 400;
-            laserSight.style.left = `${barrelX}px`;
-            laserSight.style.top = `${barrelY}px`;
-            laserSight.style.width = `${laserLength}px`;
-            laserSight.style.transform = `rotate(${gunAngle - 90}deg)`;
-            laserSight.style.transformOrigin = 'left center';
+
+            // Check if click is within game area
+            if (e.clientX >= rect.left && e.clientX <= rect.right &&
+                e.clientY >= rect.top && e.clientY <= rect.bottom) {
+
+                // Update target position to click location
+                const clickX = e.clientX - rect.left;
+                const clickY = e.clientY - rect.top;
+
+                targetX = (clickX / rect.width) * 100;
+                targetY = (clickY / rect.height) * 100;
+
+                // Clamp values
+                targetX = Math.max(5, Math.min(95, targetX));
+                targetY = Math.max(5, Math.min(85, targetY));
+
+                updateTargetPosition();
+                shoot();
+            }
+        }
+
+        function handleTouchEnd(e) {
+            e.preventDefault();
+            const gameArea = document.getElementById('gameArea');
+            const rect = gameArea.getBoundingClientRect();
+
+            // Get the touch position
+            const touch = e.changedTouches[0];
+
+            // Check if touch is within game area
+            if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
+                touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+
+                // Update target position to touch location
+                const touchX = touch.clientX - rect.left;
+                const touchY = touch.clientY - rect.top;
+
+                targetX = (touchX / rect.width) * 100;
+                targetY = (touchY / rect.height) * 100;
+
+                // Clamp values
+                targetX = Math.max(5, Math.min(95, targetX));
+                targetY = Math.max(5, Math.min(85, targetY));
+
+                updateTargetPosition();
+                shoot();
+            }
+        }
+
+        function updateTargetPosition() {
+            const targetPointer = document.getElementById('targetPointer');
+            const laserLine = document.getElementById('laserLine');
+
+            // Update target pointer position
+            targetPointer.style.left = `${targetX}%`;
+            targetPointer.style.top = `${targetY}%`;
+            targetPointer.style.transform = 'translate(-50%, -50%)';
+
+            // Update laser line from gun to target
+            updateLaserLine();
+        }
+
+        function updateLaserLine() {
+            const laserLine = document.getElementById('laserLine');
+            const gameArea = document.getElementById('gameArea');
+            const rect = gameArea.getBoundingClientRect();
+
+            // Gun position (fixed at bottom center)
+            const gunX = 50; // percentage
+            const gunY = 90; // percentage (near bottom)
+
+            // Calculate distance and angle from gun to target
+            const deltaX = targetX - gunX;
+            const deltaY = targetY - gunY;
+
+            const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+
+            // Position laser line at gun position
+            laserLine.style.left = `${gunX}%`;
+            laserLine.style.top = `${gunY}%`;
+            laserLine.style.width = `${distance}%`;
+            laserLine.style.transform = `rotate(${angle}deg)`;
+            laserLine.style.transformOrigin = 'left center';
         }
 
         function shoot() {
             const gun = document.getElementById('gun');
-            
+
             // Play shoot sound
             shootSound.currentTime = 0;
-            shootSound.play().catch(() => {});
-            
+            shootSound.play().catch(() => { });
+
             // Gun recoil animation
             gun.style.transform = 'translateY(-15px) scale(1.2)';
             setTimeout(() => gun.style.transform = 'none', 200);
 
             // Create effects
             createMuzzleFlash();
-            
+
             // Multi-shot mode
             if (multiShotMode) {
                 createBulletTrail();
@@ -1293,15 +1712,15 @@
             } else {
                 createBulletTrail();
             }
-            
+
             // Check for hits
             const hit = checkHits();
-            
+
             if (!hit) {
                 showMissIndicator();
                 resetStreak();
             }
-            
+
             // Vibration feedback
             vibrate(50);
         }
@@ -1310,70 +1729,61 @@
             const gunContainer = document.getElementById('gunContainer');
             const flash = document.createElement('div');
             flash.className = 'muzzle-flash';
-            
-            const angleRad = (gunAngle - 90) * (Math.PI / 180);
-            const barrelDistance = 35;
-            
-            const flashX = Math.sin(angleRad) * barrelDistance;
-            const flashY = -Math.cos(angleRad) * barrelDistance;
-            
-            flash.style.left = `calc(50% + ${flashX}px)`;
-            flash.style.top = `calc(50% + ${flashY}px)`;
+
+            // Position flash at gun barrel
+            flash.style.left = '50%';
+            flash.style.top = '20%';
             flash.style.transform = 'translate(-50%, -50%)';
-            
+
             gunContainer.appendChild(flash);
-            
+
             setTimeout(() => {
                 if (flash.parentNode) {
                     flash.remove();
                 }
-            }, 150);
+            }, 200);
         }
 
         function createBulletTrail() {
             const gameArea = document.getElementById('gameArea');
             const trail = document.createElement('div');
             trail.className = 'bullet-trail';
-            
+
             // Enhanced bullet for big bullets mode
             if (bigBulletsMode) {
-                trail.style.width = '10px';
-                trail.style.height = '50px';
-                trail.style.boxShadow = '0 0 20px rgba(255, 255, 0, 1)';
+                trail.style.width = '12px';
+                trail.style.height = '60px';
+                trail.style.boxShadow = '0 0 25px rgba(255, 255, 0, 1)';
             }
-            
-            const rect = gameArea.getBoundingClientRect();
+
+            // Start from gun position
             const gunX = 50;
-            const gunY = 95;
-            
-            const angleRad = (gunAngle - 90) * (Math.PI / 180);
-            const barrelOffset = 5;
-            
-            const startX = gunX + Math.sin(angleRad) * barrelOffset;
-            const startY = gunY - Math.cos(angleRad) * barrelOffset;
-            
-            const bulletDistance = 60;
-            const bulletEndX = startX + Math.sin(angleRad) * bulletDistance;
-            const bulletEndY = startY - Math.cos(angleRad) * bulletDistance;
-            
-            trail.style.left = `${startX}%`;
-            trail.style.top = `${startY}%`;
-            trail.style.transform = `translate(-50%, -50%) rotate(${gunAngle - 90}deg)`;
-            
+            const gunY = 90;
+
+            // Calculate direction to target
+            const deltaX = targetX - gunX;
+            const deltaY = targetY - gunY;
+            const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+
+            trail.style.left = `${gunX}%`;
+            trail.style.top = `${gunY}%`;
+            trail.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
+
             gameArea.appendChild(trail);
-            
-            const animationDuration = rapidFireMode ? 200 : 400;
-            
+
+            const animationDuration = rapidFireMode ? 250 : 400;
+
+            // Animate bullet towards target
             trail.animate([
-                { 
-                    left: `${startX}%`, 
-                    top: `${startY}%`,
-                    opacity: 1 
+                {
+                    left: `${gunX}%`,
+                    top: `${gunY}%`,
+                    opacity: 1
                 },
-                { 
-                    left: `${bulletEndX}%`, 
-                    top: `${bulletEndY}%`,
-                    opacity: 0 
+                {
+                    left: `${targetX}%`,
+                    top: `${targetY}%`,
+                    opacity: 0
                 }
             ], {
                 duration: animationDuration,
@@ -1389,18 +1799,10 @@
             const gameArea = document.getElementById('gameArea');
             const rect = gameArea.getBoundingClientRect();
             const balloons = document.querySelectorAll('.balloon');
-            
-            const gunPixelX = rect.left + (rect.width * 0.5);
-            const gunPixelY = rect.top + (rect.height * 0.95);
-            
-            const angleRad = (gunAngle - 90) * (Math.PI / 180);
-            const barrelOffset = 35;
-            
-            const barrelX = gunPixelX + Math.sin(angleRad) * barrelOffset;
-            const barrelY = gunPixelY - Math.cos(angleRad) * barrelOffset;
-            
-            const trajectoryDirX = Math.sin(angleRad);
-            const trajectoryDirY = -Math.cos(angleRad);
+
+            // Target position in pixels
+            const targetPixelX = rect.left + (rect.width * targetX / 100);
+            const targetPixelY = rect.top + (rect.height * targetY / 100);
 
             let hitDetected = false;
 
@@ -1408,28 +1810,25 @@
                 const balloonRect = balloon.getBoundingClientRect();
                 const balloonCenterX = balloonRect.left + balloonRect.width / 2;
                 const balloonCenterY = balloonRect.top + balloonRect.height / 2;
-                
-                const toBalloonX = balloonCenterX - barrelX;
-                const toBalloonY = balloonCenterY - barrelY;
-                
-                const crossProduct = Math.abs(
-                    trajectoryDirX * toBalloonY - trajectoryDirY * toBalloonX
+
+                // Calculate distance from target to balloon center
+                const distance = Math.sqrt(
+                    Math.pow(targetPixelX - balloonCenterX, 2) +
+                    Math.pow(targetPixelY - balloonCenterY, 2)
                 );
-                
-                const dotProduct = trajectoryDirX * toBalloonX + trajectoryDirY * toBalloonY;
-                
-                let hitRadius = bigBulletsMode ? 70 : 50;
-                if (balloon.classList.contains('balloon-b2') || 
-                    balloon.classList.contains('balloon-b3') || 
+
+                let hitRadius = bigBulletsMode ? 80 : 60;
+                if (balloon.classList.contains('balloon-b2') ||
+                    balloon.classList.contains('balloon-b3') ||
                     balloon.classList.contains('balloon-b4')) {
-                    hitRadius += 10;
+                    hitRadius += 15;
                 }
-                
+
                 if (window.innerWidth <= 768) {
-                    hitRadius *= 1.4;
+                    hitRadius *= 1.3;
                 }
-                
-                if (crossProduct <= hitRadius && dotProduct > 0) {
+
+                if (distance <= hitRadius) {
                     popBalloon(balloon);
                     showHitMarker(balloonCenterX - rect.left, balloonCenterY - rect.top);
                     hitDetected = true;
@@ -1443,18 +1842,18 @@
             const gameArea = document.getElementById('gameArea');
             const hitMarker = document.createElement('div');
             hitMarker.className = 'hit-marker';
-            
+
             hitMarker.style.left = `${x}px`;
             hitMarker.style.top = `${y}px`;
             hitMarker.style.transform = 'translate(-50%, -50%)';
-            
+
             gameArea.appendChild(hitMarker);
-            
+
             setTimeout(() => {
                 if (hitMarker.parentNode) {
                     hitMarker.remove();
                 }
-            }, 500);
+            }, 600);
         }
 
         function showMissIndicator() {
@@ -1464,26 +1863,14 @@
             missIndicator.textContent = 'MISS';
             missIndicator.style.color = '#ff4444';
             missIndicator.style.fontSize = '1.5rem';
-            
-            const rect = gameArea.getBoundingClientRect();
-            const gunX = rect.width * 0.5;
-            const gunY = rect.height * 0.95;
-            
-            const angleRad = (gunAngle - 90) * (Math.PI / 180);
-            const missDistance = 150;
-            
-            const barrelX = gunX + Math.sin(angleRad) * 35;
-            const barrelY = gunY - Math.cos(angleRad) * 35;
-            
-            const missX = barrelX + Math.sin(angleRad) * missDistance;
-            const missY = barrelY - Math.cos(angleRad) * missDistance;
-            
-            missIndicator.style.left = `${missX}px`;
-            missIndicator.style.top = `${missY}px`;
+
+            // Show miss indicator at target position
+            missIndicator.style.left = `${targetX}%`;
+            missIndicator.style.top = `${targetY}%`;
             missIndicator.style.transform = 'translate(-50%, -50%)';
-            
+
             gameArea.appendChild(missIndicator);
-            
+
             setTimeout(() => {
                 if (missIndicator.parentNode) {
                     missIndicator.remove();
@@ -1494,14 +1881,14 @@
         function popBalloon(balloon) {
             // Play sounds
             popSound.currentTime = 0;
-            popSound.play().catch(() => {});
+            popSound.play().catch(() => { });
             hitSound.currentTime = 0;
-            hitSound.play().catch(() => {});
-            
+            hitSound.play().catch(() => { });
+
             // Get points and type
             const points = parseInt(balloon.dataset.points);
             const balloonType = balloon.dataset.type;
-            
+
             // Handle different balloon types
             if (balloonType === 'bomb') {
                 // Bomb balloon - lose points and reset streak
@@ -1512,31 +1899,31 @@
                 // Normal or golden balloon
                 const finalPoints = points * multiplier;
                 score += finalPoints;
-                
+
                 // Increase streak
                 increaseStreak();
-                
+
                 showPointsPopup(balloon, finalPoints, balloonType === 'golden' ? '#ffd700' : '#00ff00');
             }
-            
+
             // Check highest score
             if (score > highestScore) {
                 highestScore = score;
                 saveHighestScore();
                 updateHighestScore();
             }
-            
+
             updateScore();
-            
+
             // Enhanced explosion effect
             balloon.src = 'cb.png';
             balloon.style.transform = 'scale(2.5)';
             balloon.style.opacity = '0';
             balloon.style.filter = 'brightness(3) saturate(2)';
-            
+
             // Vibration feedback for hit
             vibrate([100, 50, 100]);
-            
+
             setTimeout(() => {
                 if (balloon.parentNode) {
                     balloon.remove();
@@ -1547,7 +1934,7 @@
         function increaseStreak() {
             streak++;
             updateStreak();
-            
+
             // Update multiplier based on streak
             if (streak >= 10) {
                 multiplier = 3;
@@ -1557,19 +1944,19 @@
                 multiplier = 1;
             }
             updateMultiplier();
-            
+
             // Show combo notifications
             if (streak === 5) {
                 showComboNotification('5 Hit Combo!', '#ff6b35');
-                comboSound.play().catch(() => {});
+                comboSound.play().catch(() => { });
             } else if (streak === 10) {
                 showComboNotification('10 Hit Combo!', '#ff4444');
-                comboSound.play().catch(() => {});
+                comboSound.play().catch(() => { });
             } else if (streak % 15 === 0) {
                 showComboNotification(`${streak} Hit Combo!`, '#9b59b6');
-                comboSound.play().catch(() => {});
+                comboSound.play().catch(() => { });
             }
-            
+
             // Update best streak
             if (streak > bestStreak) {
                 bestStreak = streak;
@@ -1588,7 +1975,7 @@
         function updateStreak() {
             const streakDisplay = document.getElementById('streakDisplay');
             const streakCount = document.getElementById('streakCount');
-            
+
             if (streak > 0) {
                 streakDisplay.classList.remove('hidden');
                 streakCount.textContent = streak;
@@ -1601,14 +1988,14 @@
             document.getElementById('multiplier').textContent = multiplier;
         }
 
-                function showComboNotification(text, color) {
+        function showComboNotification(text, color) {
             const notification = document.createElement('div');
             notification.className = 'combo-display';
             notification.textContent = text;
             notification.style.color = color;
-            
+
             document.body.appendChild(notification);
-            
+
             setTimeout(() => {
                 if (notification.parentNode) {
                     notification.remove();
@@ -1621,17 +2008,17 @@
             popup.className = 'points-popup';
             popup.textContent = points > 0 ? `+${points}` : `${points}`;
             popup.style.color = color;
-            
+
             // Position at balloon location
             const balloonRect = balloon.getBoundingClientRect();
             const gameAreaRect = document.getElementById('gameArea').getBoundingClientRect();
-            
-            popup.style.left = `${balloonRect.left - gameAreaRect.left + balloonRect.width/2}px`;
+
+            popup.style.left = `${balloonRect.left - gameAreaRect.left + balloonRect.width / 2}px`;
             popup.style.top = `${balloonRect.top - gameAreaRect.top}px`;
             popup.style.transform = 'translateX(-50%)';
-            
+
             document.getElementById('gameArea').appendChild(popup);
-            
+
             setTimeout(() => {
                 if (popup.parentNode) {
                     popup.remove();
@@ -1647,7 +2034,7 @@
             lives--;
             updateLives();
             resetStreak();
-            
+
             if (lives <= 0) {
                 gameOver();
             }
@@ -1660,20 +2047,20 @@
         }
 
         function gameOver() {
-            gameOverSound.play().catch(() => {});
-            
+            gameOverSound.play().catch(() => { });
+
             // Clear all intervals
             balloonIntervals.forEach(interval => clearInterval(interval));
             balloonIntervals = [];
-            
+
             // Deactivate power-ups
             deactivatePowerUp();
-            
+
             // Update final scores
             document.getElementById('finalScore').textContent = score;
             updateHighestScore();
             updateBestStreak();
-            
+
             document.getElementById('gameOverScreen').classList.remove('hidden');
         }
 
@@ -1700,20 +2087,20 @@
         }, false);
 
         // Prevent context menu
-        document.addEventListener('contextmenu', function(e) {
+        document.addEventListener('contextmenu', function (e) {
             e.preventDefault();
         });
 
         // Handle orientation change
-        window.addEventListener('orientationchange', function() {
-            setTimeout(function() {
-                updateGunRotation();
+        window.addEventListener('orientationchange', function () {
+            setTimeout(function () {
+                updateTargetPosition();
             }, 100);
         });
 
         // Handle window resize
-        window.addEventListener('resize', function() {
-            updateGunRotation();
+        window.addEventListener('resize', function () {
+            updateTargetPosition();
         });
 
         // Auto-hide instructions after 15 seconds
@@ -1728,60 +2115,9 @@
             }
         }, 15000);
 
-        // Enhanced mobile touch handling for better gun control
-        let touchStartTime = 0;
-        let touchStartPos = { x: 0, y: 0 };
-        let isDragging = false;
-
-        document.getElementById('gameArea').addEventListener('touchstart', function(e) {
-            touchStartTime = Date.now();
-            touchStartPos.x = e.touches[0].clientX;
-            touchStartPos.y = e.touches[0].clientY;
-            isDragging = false;
-        });
-
-        document.getElementById('gameArea').addEventListener('touchmove', function(e) {
-            e.preventDefault();
-            isDragging = true;
-            handleTouchMove(e);
-        });
-
-        document.getElementById('gameArea').addEventListener('touchend', function(e) {
-            const touchEndTime = Date.now();
-            const touchDuration = touchEndTime - touchStartTime;
-            
-            // If it's a quick tap and not dragging, adjust aim to that point
-            if (touchDuration < 300 && !isDragging) {
-                const rect = this.getBoundingClientRect();
-                const touchX = touchStartPos.x;
-                const touchY = touchStartPos.y;
-                
-                const gunX = rect.left + rect.width / 2;
-                const gunY = rect.bottom - 50;
-                
-                const deltaX = touchX - gunX;
-                const deltaY = gunY - touchY;
-                
-                let angle = Math.atan2(deltaX, deltaY) * (180 / Math.PI);
-                let gunAngleCalculated = 90 - angle;
-                
-                if (gunAngleCalculated < 0) gunAngleCalculated += 360;
-                if (gunAngleCalculated > 360) gunAngleCalculated -= 360;
-                
-                if (gunAngleCalculated > 180) {
-                    gunAngleCalculated = 360 - gunAngleCalculated;
-                }
-                
-                gunAngleCalculated = Math.max(30, Math.min(180, gunAngleCalculated));
-                
-                targetAngle = findClosestAngle(gunAngleCalculated);
-                snapToAngle();
-            }
-        });
-
         // Add sound toggle functionality
         let soundEnabled = true;
-        
+
         function toggleSound() {
             soundEnabled = !soundEnabled;
             const soundBtn = document.getElementById('soundBtn');
@@ -1793,7 +2129,7 @@
 
         // Override sound playing to respect sound toggle
         const originalAudioPlay = Audio.prototype.play;
-        Audio.prototype.play = function() {
+        Audio.prototype.play = function () {
             if (soundEnabled) {
                 return originalAudioPlay.call(this);
             }
@@ -1808,35 +2144,65 @@
             soundBtn.textContent = '🔊';
             soundBtn.title = 'Toggle Sound';
             soundBtn.addEventListener('click', toggleSound);
-            soundBtn.addEventListener('touchend', function(e) {
+            soundBtn.addEventListener('touchend', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 toggleSound();
             });
-            
+
             document.body.appendChild(soundBtn);
         }
 
         // Initialize sound toggle
         setTimeout(addSoundToggle, 1000);
 
-        // Performance optimization based on device
+        // UPDATED: Performance optimization with correct difficulty multipliers
         function getOptimalSettings() {
             const isMobile = window.innerWidth <= 768;
             const isLowEnd = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2;
-            
+
+            // Base settings
+            let baseInterval = isMobile ? (isLowEnd ? 2500 : 2000) : 1500;
+            let baseSpeed = isMobile ? (isLowEnd ? 8000 : 7000) : 6000;
+            let maxBalloons = isMobile ? (isLowEnd ? 3 : 4) : 6;
+
+            // Apply difficulty multiplier to speed (higher multiplier = faster balloons = lower duration)
+            const adjustedSpeed = Math.round(baseSpeed / difficultyMultiplier);
+
             return {
-                balloonInterval: isMobile ? (isLowEnd ? 2500 : 2000) : 1500,
-                balloonSpeed: isMobile ? (isLowEnd ? 7000 : 6000) : 5000,
-                maxBalloons: isMobile ? (isLowEnd ? 3 : 4) : 6
+                balloonInterval: baseInterval,
+                balloonSpeed: adjustedSpeed,
+                maxBalloons: maxBalloons
             };
         }
 
-        // Debug functions
+        // Keyboard shortcuts for difficulty change
+        document.addEventListener('keydown', function (e) {
+            // Quick difficulty change with number keys
+            if (e.key === '1') {
+                selectDifficulty('easy');
+            } else if (e.key === '2') {
+                selectDifficulty('medium');
+            } else if (e.key === '3') {
+                selectDifficulty('hard');
+            }
+
+            // Debug info
+            if (e.key === 'd' || e.key === 'D') {
+                debugInfo();
+            }
+
+            // Toggle sound with 'S' key
+            if (e.key === 's' || e.key === 'S') {
+                toggleSound();
+            }
+        });
+
+        // Debug
         function debugInfo() {
             console.log('🎯 ENHANCED BALLOON SHOOTER - Debug Info:');
-            console.log(`Current Gun Angle: ${gunAngle}°`);
-            console.log(`Target Angle: ${targetAngle}°`);
+            console.log(`Current Difficulty: ${currentDifficulty} (${difficultyMultiplier}x speed)`);
+            console.log(`Target Position: X=${targetX.toFixed(1)}%, Y=${targetY.toFixed(1)}%`);
             console.log(`Score: ${score}, Lives: ${lives}`);
             console.log(`Streak: ${streak}, Multiplier: ${multiplier}x`);
             console.log(`Best Streak: ${bestStreak}`);
@@ -1844,70 +2210,50 @@
             console.log(`Balloons on screen: ${document.querySelectorAll('.balloon').length}`);
             console.log(`Power-ups on screen: ${document.querySelectorAll('.power-up').length}`);
             console.log(`Sound enabled: ${soundEnabled}`);
-        }
 
-        // Keyboard shortcuts for debugging and control
-        document.addEventListener('keydown', function(e) {
-            // Debug info
-            if (e.key === 'd' || e.key === 'D') {
-                debugInfo();
-            }
-            
-            // Quick angle selection with number keys
-            if (e.key >= '1' && e.key <= '9') {
-                const index = parseInt(e.key) - 1;
-                if (index < presetAngles.length) {
-                    targetAngle = presetAngles[index];
-                    snapToAngle();
-                }
-            }
-            
-            // Reset to center (90°) with 'R' key
-            if (e.key === 'r' || e.key === 'R') {
-                targetAngle = 90;
-                snapToAngle();
-            }
-            
-            // Toggle sound with 'S' key
-            if (e.key === 's' || e.key === 'S') {
-                toggleSound();
-            }
-        });
+            const settings = getOptimalSettings();
+            console.log(`Game Settings:`, settings);
+        }
 
         // Initialize game with welcome message
         function showWelcomeMessage() {
             console.log('🎯 ENHANCED BALLOON SHOOTER - Game Loaded!');
             console.log('🚀 NEW FEATURES ADDED:');
+            console.log('  ✅ Difficulty System: Easy (1.5x), Medium (2x), Hard (2.5x) balloon speeds');
+            console.log('  ✅ 18 Different Balloon Types: b1.png through b18.png');
+            console.log('  ✅ Simplified Aiming: Click/touch anywhere to aim and shoot');
+            console.log('  ✅ Visual Target Pointer: Red crosshair shows where you\'re aiming');
+            console.log('  ✅ Laser Sight: Light red line from gun to target');
             console.log('  ✅ Power-ups: Multi-shot, Rapid Fire, Big Bullets');
             console.log('  ✅ Special Balloons: Golden (+20 pts), Bomb (-10 pts)');
-            console.log('  ✅ Moving Balloons: Zigzag pattern (30% chance)');
+            console.log('  ✅ Moving Balloons: Zigzag pattern (40% chance)');
             console.log('  ✅ Streak System: Build combos for multipliers');
-            console.log('  ✅ Multiplier System: 1x → 2x → 3x based on streak');
-            console.log('  ✅ Enhanced Visuals: Glowing effects, animations');
-            console.log('  ✅ Sound Effects: Power-ups, combos, enhanced audio');
-            console.log('  ✅ Mobile Optimized: Better touch controls');
+            console.log('  ✅ Enhanced Mobile Controls: Touch to aim and shoot');
             console.log('🎮 GAME MECHANICS:');
-            console.log('  • Normal Balloons: 2-10 points');
+            console.log('  • Normal Balloons: 2-15 points (18 different types)');
             console.log('  • Golden Balloons: 20 points (5% spawn rate)');
             console.log('  • Bomb Balloons: -10 points (3% spawn rate)');
-            console.log('  • Moving Balloons: Zigzag movement (30% chance)');
+            console.log('  • Moving Balloons: Zigzag movement (40% chance)');
             console.log('  • Power-ups: Spawn every 15 seconds');
             console.log('  • Streak Multipliers: 5+ hits = 2x, 10+ hits = 3x');
-            console.log('  • Combo Notifications: 5, 10, 15+ hit streaks');
+            console.log('  • Difficulty affects balloon speed only');
             console.log('🔫 POWER-UPS:');
             console.log('  • 🟠 Multi-shot (3x): Fires 3 bullets (10s duration)');
             console.log('  • ⚡ Rapid Fire: Faster shooting (8s duration)');
             console.log('  • 💥 Big Bullets: Larger hit area (12s duration)');
             console.log('🎯 CONTROLS:');
-            console.log('  • Mouse/Touch: Aim gun');
-            console.log('  • Click Gun: Shoot');
+            console.log('  • Mouse/Touch: Aim target pointer');
+            console.log('  • Click/Touch: Shoot at target location');
             console.log('  • Click Power-ups: Collect them');
             console.log('  • Space: Shoot (keyboard)');
-            console.log('  • Arrow Keys: Cycle angles');
-            console.log('  • Number Keys 1-9: Quick angle selection');
-            console.log('  • R: Reset to center');
+            console.log('  • Arrow Keys: Move target pointer');
+            console.log('  • Number Keys 1-3: Change difficulty (Easy/Medium/Hard)');
             console.log('  • S: Toggle sound');
             console.log('  • D: Debug info');
+            console.log('🏆 DIFFICULTY LEVELS:');
+            console.log('  • Easy: 1.5x balloon speed (relaxed gameplay)');
+            console.log('  • Medium: 2x balloon speed (balanced challenge)');
+            console.log('  • Hard: 2.5x balloon speed (maximum challenge)');
         }
 
         // Show welcome message after game loads
@@ -1916,22 +2262,22 @@
         // Add performance monitoring
         let frameCount = 0;
         let lastTime = performance.now();
-        
+
         function monitorPerformance() {
             frameCount++;
             const currentTime = performance.now();
-            
+
             if (currentTime - lastTime >= 5000) { // Every 5 seconds
                 const fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
-                
+
                 if (fps < 30) {
                     console.warn(`⚠️ Low FPS detected: ${fps}fps - Consider reducing balloon count`);
                 }
-                
+
                 frameCount = 0;
                 lastTime = currentTime;
             }
-            
+
             requestAnimationFrame(monitorPerformance);
         }
 
@@ -1940,22 +2286,301 @@
             requestAnimationFrame(monitorPerformance);
         }, 3000);
 
+        // Enhanced mobile touch handling for better control
+        let touchStartTime = 0;
+        let touchStartPos = { x: 0, y: 0 };
+        let isDragging = false;
+
+        document.getElementById('gameArea').addEventListener('touchstart', function (e) {
+            touchStartTime = Date.now();
+            touchStartPos.x = e.touches[0].clientX;
+            touchStartPos.y = e.touches[0].clientY;
+            isDragging = false;
+        });
+
+        document.getElementById('gameArea').addEventListener('touchmove', function (e) {
+            e.preventDefault();
+            isDragging = true;
+            handleTouchMove(e);
+        });
+
+        document.getElementById('gameArea').addEventListener('touchend', function (e) {
+            const touchEndTime = Date.now();
+            const touchDuration = touchEndTime - touchStartTime;
+
+            // If it's a quick tap and not dragging, shoot at that location
+            if (touchDuration < 300 && !isDragging) {
+                handleTouchEnd(e);
+            }
+        });
+
+        // Add difficulty card click handlers
+        document.addEventListener('DOMContentLoaded', function () {
+            // Add click handlers for difficulty cards
+            const difficultyCards = document.querySelectorAll('.difficulty-card');
+            difficultyCards.forEach(card => {
+                card.addEventListener('click', function () {
+                    const difficulty = this.onclick.toString().match(/'(\w+)'/)[1];
+                    selectDifficulty(difficulty);
+                });
+
+                card.addEventListener('touchend', function (e) {
+                    e.preventDefault();
+                    const difficulty = this.onclick.toString().match(/'(\w+)'/)[1];
+                    selectDifficulty(difficulty);
+                });
+            });
+        });
+
+        // Improved error handling for balloon images
+        function handleBalloonImageError(balloon, balloonType) {
+            // Create a colored balloon if image fails to load
+            balloon.style.backgroundColor = balloonType.type === 'golden' ? '#ffd700' :
+                balloonType.type === 'bomb' ? '#ff4444' : '#ff6b6b';
+            balloon.style.borderRadius = '50% 50% 50% 50% / 60% 60% 40% 40%';
+            balloon.style.border = '3px solid #fff';
+            balloon.style.boxShadow = '0 4px 8px rgba(0,0,0,0.3)';
+
+            // Add balloon string
+            const string = document.createElement('div');
+            string.style.cssText = `
+                position: absolute;
+                bottom: -20px;
+                left: 50%;
+                width: 2px;
+                height: 20px;
+                background: #333;
+                transform: translateX(-50%);
+            `;
+            balloon.appendChild(string);
+        }
+
+        // Enhanced balloon creation with better error handling
+        function createBalloonWithFallback() {
+            const settings = getOptimalSettings();
+            let balloonType = balloonTypes[Math.floor(Math.random() * balloonTypes.length)];
+
+            // Special balloon logic
+            const specialChance = Math.random();
+            let isSpecial = false;
+            let specialType = 'normal';
+
+            if (specialChance < 0.05) {
+                specialType = 'golden';
+                balloonType = { ...balloonType, points: 20, type: 'golden' };
+                isSpecial = true;
+            } else if (specialChance < 0.08) {
+                specialType = 'bomb';
+                balloonType = { ...balloonType, points: -10, type: 'bomb' };
+                isSpecial = true;
+            }
+
+            const balloon = document.createElement('img');
+            balloon.src = balloonType.image;
+            balloon.className = `balloon absolute ${balloonType.class}`;
+            balloon.style.left = `${Math.random() * 70 + 10}%`;
+            balloon.style.bottom = '-150px';
+            balloon.style.zIndex = '20';
+
+            balloon.dataset.points = balloonType.points;
+            balloon.dataset.type = balloonType.type;
+
+            // Enhanced error handling
+            balloon.onerror = function () {
+                handleBalloonImageError(this, balloonType);
+            };
+
+            // Add special effects
+            if (specialType === 'golden') {
+                balloon.classList.add('balloon-golden');
+            } else if (specialType === 'bomb') {
+                balloon.classList.add('balloon-bomb');
+            }
+
+            // Moving balloons
+            if (Math.random() < 0.4) {
+                balloon.classList.add('balloon-zigzag');
+            }
+
+            return balloon;
+        }
+
+        // Add pause/resume functionality
+        let gamePaused = false;
+
+        function togglePause() {
+            gamePaused = !gamePaused;
+
+            if (gamePaused) {
+                // Pause all animations
+                document.querySelectorAll('.balloon').forEach(balloon => {
+                    balloon.style.animationPlayState = 'paused';
+                });
+
+                // Show pause indicator
+                showPauseIndicator();
+            } else {
+                // Resume all animations
+                document.querySelectorAll('.balloon').forEach(balloon => {
+                    balloon.style.animationPlayState = 'running';
+                });
+
+                // Hide pause indicator
+                hidePauseIndicator();
+            }
+        }
+
+        function showPauseIndicator() {
+            const pauseIndicator = document.createElement('div');
+            pauseIndicator.id = 'pauseIndicator';
+            pauseIndicator.className = 'fixed inset-0 bg-black/50 z-40 flex items-center justify-center';
+            pauseIndicator.innerHTML = `
+                <div class="bg-white rounded-lg p-8 text-center">
+                    <h2 class="text-3xl font-bold mb-4">Game Paused</h2>
+                    <p class="text-lg">Press P to resume</p>
+                </div>
+            `;
+            document.body.appendChild(pauseIndicator);
+        }
+
+        function hidePauseIndicator() {
+            const pauseIndicator = document.getElementById('pauseIndicator');
+            if (pauseIndicator) {
+                pauseIndicator.remove();
+            }
+        }
+
+        // Add pause key handler
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'p' || e.key === 'P') {
+                togglePause();
+            }
+        });
+
+        // Add fullscreen functionality
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Add fullscreen key handler
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'f' || e.key === 'F') {
+                toggleFullscreen();
+            }
+        });
+
+        // Add statistics tracking
+        let gameStats = {
+            totalShots: 0,
+            totalHits: 0,
+            totalMisses: 0,
+            totalGoldenBalloons: 0,
+            totalBombBalloons: 0,
+            totalPowerUpsCollected: 0,
+            longestStreak: 0,
+            totalPlayTime: 0,
+            gamesPlayed: 0
+        };
+
+        function updateStats(action, value = 1) {
+            switch (action) {
+                case 'shot':
+                    gameStats.totalShots += value;
+                    break;
+                case 'hit':
+                    gameStats.totalHits += value;
+                    break;
+                case 'miss':
+                    gameStats.totalMisses += value;
+                    break;
+                case 'golden':
+                    gameStats.totalGoldenBalloons += value;
+                    break;
+                case 'bomb':
+                    gameStats.totalBombBalloons += value;
+                    break;
+                case 'powerup':
+                    gameStats.totalPowerUpsCollected += value;
+                    break;
+                case 'streak':
+                    if (value > gameStats.longestStreak) {
+                        gameStats.longestStreak = value;
+                    }
+                    break;
+                case 'game':
+                    gameStats.gamesPlayed += value;
+                    break;
+            }
+
+            // Save stats to localStorage
+            localStorage.setItem('balloonShooterStats', JSON.stringify(gameStats));
+        }
+
+        function loadStats() {
+            const saved = localStorage.getItem('balloonShooterStats');
+            if (saved) {
+                gameStats = { ...gameStats, ...JSON.parse(saved) };
+            }
+        }
+
+        function showStats() {
+            const accuracy = gameStats.totalShots > 0 ?
+                ((gameStats.totalHits / gameStats.totalShots) * 100).toFixed(1) : 0;
+
+            console.log('📊 GAME STATISTICS:');
+            console.log(`Games Played: ${gameStats.gamesPlayed}`);
+            console.log(`Total Shots: ${gameStats.totalShots}`);
+            console.log(`Total Hits: ${gameStats.totalHits}`);
+            console.log(`Total Misses: ${gameStats.totalMisses}`);
+            console.log(`Accuracy: ${accuracy}%`);
+            console.log(`Golden Balloons Hit: ${gameStats.totalGoldenBalloons}`);
+            console.log(`Bomb Balloons Hit: ${gameStats.totalBombBalloons}`);
+            console.log(`Power-ups Collected: ${gameStats.totalPowerUpsCollected}`);
+            console.log(`Longest Streak: ${gameStats.longestStreak}`);
+            console.log(`Highest Score: ${highestScore}`);
+        }
+
+        // Load stats on game start
+        loadStats();
+
+        // Add stats key handler
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 't' || e.key === 'T') {
+                showStats();
+            }
+        });
+
         console.log('🎯 ENHANCED BALLOON SHOOTER - Loaded Successfully!');
-        console.log('🚀 EXCITING NEW FEATURES:');
-        console.log('  🎯 Clean targeting system with crosshair and laser sight');
-        console.log('  🟡 Golden balloons worth 20 points');
-        console.log('  💣 Bomb balloons that reduce score');
-        console.log('  🔄 Moving balloons with zigzag patterns');
-        console.log('  ⚡ Power-ups: Multi-shot, Rapid Fire, Big Bullets');
-        console.log('  🔥 Streak system with score multipliers');
-        console.log('  🎊 Combo notifications and effects');
-        console.log('  📱 Enhanced mobile controls');
-        console.log('  🔊 Rich sound effects and audio feedback');
-        console.log('  ✨ Smooth animations and visual effects');
+        console.log('🚀 LATEST FEATURES:');
+        console.log('  🎯 Simplified Aiming System: Click/touch anywhere to aim and shoot');
+        console.log('  🎚️ Difficulty Selection: Easy, Medium, Hard with different balloon speeds');
+        console.log('  🎈 18 Different Balloon Types: More variety and points');
+        console.log('  🔴 Visual Target Pointer: Red crosshair shows exact aim point');
+        console.log('  📏 Laser Sight: Light red line from gun to target');
+        console.log('  📱 Enhanced Mobile Controls: Better touch responsiveness');
+        console.log('  ⏸️ Pause/Resume: Press P to pause game');
+        console.log('  🖥️ Fullscreen: Press F for fullscreen mode');
+        console.log('  📊 Statistics Tracking: Press T to view stats');
         console.log('🎮 ENHANCED BALLOON SHOOTER IS READY TO PLAY!');
+        console.log('💡 TIPS:');
+        console.log('  • Start with Easy difficulty to learn the mechanics');
+        console.log('  • Build streaks for higher multipliers');
+        console.log('  • Collect power-ups for temporary advantages');
+        console.log('  • Avoid bomb balloons to maintain your streak');
+        console.log('  • Golden balloons are worth 20 points - prioritize them!');
     </script>
 </body>
+
 </html>
+
+
+
 
 
 
